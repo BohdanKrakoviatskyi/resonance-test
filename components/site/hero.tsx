@@ -30,9 +30,10 @@ export function Hero() {
           <YouTubeMusicBadge />
         </div>
 
-        <h1 className="mt-6 text-balance bg-gradient-to-b from-white to-white/70 bg-clip-text text-4xl leading-[1.06] font-semibold tracking-tight text-transparent sm:text-6xl md:text-7xl">
+        <h1 className="mt-6 text-balance text-4xl leading-[1.06] font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl">
           <AnimatedText
             text="Your underground tracks and main library in one window."
+            wordClassName="bg-gradient-to-b from-white to-white/75 bg-clip-text text-transparent"
             baseDelay={100}
             stagger={50}
           />
