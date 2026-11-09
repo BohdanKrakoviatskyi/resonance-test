@@ -50,8 +50,8 @@ export function HowItWorks() {
         {steps.map((step, index) => (
           <li key={index} className="flex">
             <Reveal delay={80 + index * 90} className="flex w-full">
-              <GlassCard className="flex h-full w-full flex-col p-6">
-                <div className="min-h-[108px]">
+              <GlassCard className="flex h-full w-full flex-col p-5">
+                <div className="min-h-[104px]">
                   <span className="font-mono text-xs text-primary/80">
                     {String(index + 1).padStart(2, '0')}
                   </span>
@@ -72,7 +72,7 @@ export function HowItWorks() {
 }
 
 // ============================================================================
-// 01: ПЛОТНЫЙ ИНТЕРАКТИВНЫЙ ВИДЖЕТ АККАУНТОВ И СИНХРОНИЗАЦИИ
+// 01: ПЛОТНЫЙ ВИДЖЕТ АККАУНТОВ И СИНХРОНИЗАЦИИ (БЕЗ ОБРЕЗКИ ТЕКСТА И БЕЗ OAUTH 2.0)
 // ============================================================================
 function ConnectVisual() {
   const { t } = useI18n()
@@ -85,26 +85,24 @@ function ConnectVisual() {
     <div className="flex h-full flex-1 flex-col gap-2.5 rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
       {/* SoundCloud account card */}
       <div className="rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
+        {/* Row 1: 32x32 icon + full platform name on left, compact Linked badge on right */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-[#ff5500]/15 text-[#ff5500] ring-1 ring-[#ff5500]/30">
               <svg aria-hidden="true" viewBox="0 0 24 14" fill="currentColor" className="h-3 w-4">
                 <path d="M1.5 7.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3 1a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm6.25-3A4.75 4.75 0 0 1 21.4 5.3a3.25 3.25 0 0 1-.15 6.45H13.5a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .5-.7 4.73 4.73 0 0 1 3.5-1.05Z" />
               </svg>
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-bold leading-tight text-white">SoundCloud</p>
-              <p className="mt-0.5 truncate font-mono text-[10px] leading-tight whitespace-nowrap text-[#b8a49a]">
-                likes • reposts • sets
-              </p>
-            </div>
+            <span className="text-[13px] font-bold leading-tight whitespace-nowrap text-white">
+              SoundCloud
+            </span>
           </div>
 
           <button
             type="button"
             onClick={() => setScLinked((v) => !v)}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold whitespace-nowrap transition-all',
+              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2 py-[3px] font-mono text-[11px] font-semibold whitespace-nowrap transition-all',
               scLinked
                 ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
                 : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
@@ -115,16 +113,22 @@ function ConnectVisual() {
           </button>
         </div>
 
-        <div className="mt-2.5 flex items-center justify-between border-t border-white/[0.06] pt-2 font-mono text-[10px] text-[#a8948a]">
-          <span className="whitespace-nowrap">{t.howItWorks.step1.scStats}</span>
-          <span className="text-[#ff5500]">OAuth 2.0</span>
+        {/* Row 2: Full-width subtitle so Linked button never squeezes it */}
+        <p className="mt-2 font-mono text-[11px] leading-tight whitespace-nowrap text-[#b8a49a]">
+          likes • reposts • sets
+        </p>
+
+        {/* Row 3: Clean stats line without OAuth 2.0 */}
+        <div className="mt-2 border-t border-white/[0.06] pt-2 font-mono text-[11px] whitespace-nowrap text-[#a8948a]">
+          {t.howItWorks.step1.scStats}
         </div>
       </div>
 
       {/* YouTube Music account card */}
       <div className="rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
+        {/* Row 1: 32x32 icon + full platform name on left, compact Linked badge on right */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-[#ff0033]/15 text-[#ff0033] ring-1 ring-[#ff0033]/30">
               <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-4">
                 <circle cx="8" cy="8" r="7.5" fill="#ff0033" />
@@ -132,19 +136,16 @@ function ConnectVisual() {
                 <path d="M6.8 5.9L10.3 8L6.8 10.1V5.9Z" fill="white" />
               </svg>
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-bold leading-tight text-white">YouTube Music</p>
-              <p className="mt-0.5 truncate font-mono text-[10px] leading-tight whitespace-nowrap text-[#b8a49a]">
-                playlists • albums • mixes
-              </p>
-            </div>
+            <span className="text-[13px] font-bold leading-tight whitespace-nowrap text-white">
+              YouTube Music
+            </span>
           </div>
 
           <button
             type="button"
             onClick={() => setYtLinked((v) => !v)}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold whitespace-nowrap transition-all',
+              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2 py-[3px] font-mono text-[11px] font-semibold whitespace-nowrap transition-all',
               ytLinked
                 ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
                 : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
@@ -155,32 +156,43 @@ function ConnectVisual() {
           </button>
         </div>
 
-        <div className="mt-2.5 flex items-center justify-between border-t border-white/[0.06] pt-2 font-mono text-[10px] text-[#a8948a]">
-          <span className="whitespace-nowrap">{t.howItWorks.step1.ytStats}</span>
-          <span className="text-[#ff0033]">OAuth 2.0</span>
+        {/* Row 2: Full-width subtitle */}
+        <p className="mt-2 font-mono text-[11px] leading-tight whitespace-nowrap text-[#b8a49a]">
+          playlists • albums • mixes
+        </p>
+
+        {/* Row 3: Clean stats line without OAuth 2.0 */}
+        <div className="mt-2 border-t border-white/[0.06] pt-2 font-mono text-[11px] whitespace-nowrap text-[#a8948a]">
+          {t.howItWorks.step1.ytStats}
         </div>
       </div>
 
-      {/* Sync status panel filling remaining height without empty gaps */}
-      <div className="flex flex-1 flex-col justify-between rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-3">
+      {/* Sync status panel — dense gap-3 layout, no truncation */}
+      <div className="flex flex-1 flex-col justify-center gap-3 rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-3">
         <div className="flex items-center gap-2.5">
           <span className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-black">
             <LogoMark className="size-6 rounded-none" />
           </span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-bold leading-tight text-white">
+          <div>
+            <p className="text-[13px] font-bold leading-tight text-white">
               {t.howItWorks.step1.synced}
             </p>
-            <p className="mt-0.5 truncate text-[10px] leading-tight text-[#b8a49a]">
+            <p className="mt-0.5 text-[11px] leading-tight text-[#b8a49a]">
               {t.howItWorks.step1.mergeSub}
             </p>
           </div>
         </div>
 
-        <div className="mt-2.5 space-y-1.5">
-          <div className="flex items-center justify-between font-mono text-[10px]">
+        <div className="space-y-1.5">
+          <div className="flex w-full items-center justify-between font-mono text-[10px]">
             <span className="text-[#b8a49a]">
-              {scLinked && ytLinked ? '982 tracks indexed' : scLinked ? '840 tracks indexed' : ytLinked ? '142 tracks indexed' : 'Paused'}
+              {scLinked && ytLinked
+                ? '982 tracks indexed'
+                : scLinked
+                  ? '840 tracks indexed'
+                  : ytLinked
+                    ? '142 tracks indexed'
+                    : 'Paused'}
             </span>
             <span className="font-semibold text-[#f5d0c5] whitespace-nowrap">
               {syncPct}% synced
@@ -194,9 +206,9 @@ function ConnectVisual() {
           </div>
         </div>
 
-        <div className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-black/35 px-2.5 py-1.5 font-mono text-[10px] text-[#c7b3a9]">
+        <div className="flex items-center justify-center gap-1.5 rounded-xl bg-black/35 px-2 py-2 font-mono text-[10px] leading-tight text-[#c7b3a9]">
           <span className="size-1.5 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-          <span className="truncate whitespace-nowrap">{t.howItWorks.step1.oauthNote}</span>
+          <span className="text-center">{t.howItWorks.step1.oauthNote}</span>
         </div>
       </div>
     </div>
@@ -204,7 +216,7 @@ function ConnectVisual() {
 }
 
 // ============================================================================
-// 02: ТОЧНАЯ МИНИ-КОПИЯ САЙДБАРА С РЕАЛЬНЫМИ ОБЛОЖКАМИ И ФИЛЬТРАМИ
+// 02: ТОЧНАЯ МИНИ-КОПИЯ САЙДБАРА С ОРАНЖЕВЫМ FAVORITES И БЕЗ ПУСТОТЫ ВНИЗУ
 // ============================================================================
 interface SidebarPlaylist {
   id: string
@@ -270,9 +282,9 @@ function LibraryVisual() {
         </div>
       </div>
 
-      {/* Dense playlist list (gap: 6px, no space-between!) */}
-      <div className="flex-1 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
-        <ul className="custom-queue-scroll flex h-[282px] flex-col gap-1.5 overflow-y-auto pr-1">
+      {/* Full-height playlist container (flex-1, no bottom hole, hidden scrollbar) */}
+      <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
+        <ul className="custom-queue-scroll flex h-full flex-1 flex-col gap-1.5 overflow-y-auto">
           {filtered.map((item) => {
             const active = item.id === activeId
             return (
@@ -287,10 +299,13 @@ function LibraryVisual() {
                       : 'hover:bg-white/[0.05]',
                   )}
                 >
-                  {/* 36x36 rounded square cover */}
+                  {/* 36x36 rounded square cover — warm orange/peach heart for Favorites */}
                   {item.source === 'fav' ? (
-                    <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-sky-400/25 bg-gradient-to-br from-sky-400/25 via-cyan-500/15 to-[#251813] text-sky-300 shadow-inner">
-                      <Heart className="size-4 fill-current" aria-hidden="true" />
+                    <span
+                      className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#e87a30]/35 text-[#f5d0c5] shadow-inner"
+                      style={{ background: 'rgba(232, 122, 48, 0.15)' }}
+                    >
+                      <Heart className="size-4 fill-[#e87a30] text-[#e87a30]" aria-hidden="true" />
                     </span>
                   ) : (
                     <div className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/40">
@@ -338,9 +353,9 @@ function LibraryVisual() {
                         </svg>
                       )}
                       {item.source === 'fav' && (
-                        <span className="size-1.5 shrink-0 rounded-full bg-sky-400" />
+                        <span className="size-1.5 shrink-0 rounded-full bg-[#e87a30]" />
                       )}
-                      <span className="truncate whitespace-nowrap">
+                      <span className="whitespace-nowrap">
                         {item.count} {t.howItWorks.step2.tracksUnit}
                       </span>
                     </div>
@@ -356,7 +371,7 @@ function LibraryVisual() {
 }
 
 // ============================================================================
-// 03: ИНТЕРАКТИВНЫЙ ВИДЖЕТ AUDIO NORMALIZATION (ТОЧНО ПО СКРИНШОТУ НАСТРОЕК)
+// 03: ИНТЕРАКТИВНЫЙ ВИДЖЕТ AUDIO NORMALIZATION (ПЛОТНЫЙ FLEX GAP-3.5 БЕЗ ПУСТОТ)
 // ============================================================================
 type LufsKey = 'quiet' | 'standard' | 'loud'
 
@@ -413,35 +428,35 @@ function NormalizationVisual() {
   const bars = enabled ? activeConfig.bars : RAW_UNNORMALIZED_BARS
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
-      {/* Header matching app screenshot: square soundwave icon + title + subtitle */}
+    <div className="flex h-full flex-1 flex-col gap-3.5 rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
+      {/* Header: square soundwave icon + title + subtitle */}
       <div className="flex items-center gap-2.5">
         <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#38271f] text-[#f7d2c4] shadow-inner">
           <SoundwaveBadgeIcon className="size-4" />
         </span>
-        <div className="min-w-0">
-          <p className="truncate text-xs font-bold leading-tight text-white">
+        <div>
+          <p className="text-[13px] font-bold leading-tight text-white">
             {t.howItWorks.step3.widgetTitle}
           </p>
-          <p className="mt-0.5 truncate text-[10px] leading-tight text-[#b8a49a]">
+          <p className="mt-0.5 text-[11px] leading-tight text-[#b8a49a]">
             {t.howItWorks.step3.widgetSub}
           </p>
         </div>
       </div>
 
-      {/* Enabled / Disabled 2-pill toggle row */}
-      <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+      {/* Enabled / Disabled 2-button row with taller solid padding */}
+      <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
           onClick={() => setEnabled(true)}
           className={cn(
-            'flex cursor-pointer items-center justify-center gap-1.5 rounded-full py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+            'flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap transition-all duration-200',
             enabled
               ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
               : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
           )}
         >
-          <Check className="size-3 shrink-0 stroke-[2.5]" aria-hidden="true" />
+          <Check className="size-3.5 shrink-0 stroke-[2.5]" aria-hidden="true" />
           <span>{t.howItWorks.step3.enabled}</span>
         </button>
 
@@ -449,7 +464,7 @@ function NormalizationVisual() {
           type="button"
           onClick={() => setEnabled(false)}
           className={cn(
-            'flex cursor-pointer items-center justify-center rounded-full py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+            'flex cursor-pointer items-center justify-center rounded-xl px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap transition-all duration-200',
             !enabled
               ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
               : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
@@ -459,13 +474,13 @@ function NormalizationVisual() {
         </button>
       </div>
 
-      {/* Target loudness section with 3 non-wrapping LUFS pills */}
-      <div className="mt-2.5">
-        <p className="px-0.5 text-[10px] font-bold tracking-tight text-white/90">
+      {/* Target loudness section with 3 solid non-wrapping buttons */}
+      <div className="space-y-2">
+        <p className="px-0.5 text-[11px] font-bold tracking-tight text-white/90">
           {t.howItWorks.step3.targetLoudness}
         </p>
 
-        <div className="mt-1.5 flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           {(
             [
               {
@@ -495,7 +510,7 @@ function NormalizationVisual() {
                   setTarget(item.key)
                 }}
                 className={cn(
-                  'flex w-full cursor-pointer items-center justify-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+                  'flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap transition-all duration-200',
                   isSelected
                     ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
                     : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
@@ -509,11 +524,11 @@ function NormalizationVisual() {
         </div>
       </div>
 
-      {/* Live Loudness Meter / Gain Reduction visualizer at the bottom */}
-      <div className="mt-2.5 rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-2.5">
-        <div className="flex items-center justify-between font-mono text-[9px] text-[#b8a49a]">
+      {/* Expanded Loudness Meter visualizer filling remaining space at bottom */}
+      <div className="flex flex-1 flex-col justify-between rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-3.5">
+        <div className="flex w-full items-center justify-between gap-2 font-mono text-[10px] text-[#b8a49a]">
           <span className="whitespace-nowrap">
-            {enabled ? `Target: ${activeConfig.lufs}` : 'Raw peaks (clipping)'}
+            {enabled ? `Target: ${activeConfig.lufs}` : 'Raw peaks'}
           </span>
           <span
             className={cn(
@@ -525,10 +540,13 @@ function NormalizationVisual() {
           </span>
         </div>
 
-        {/* Dynamic peak comparison bars */}
-        <div className="mt-2 flex h-9 items-end justify-between gap-1 px-0.5">
+        {/* Tall expressive loudness bars (2x taller) */}
+        <div className="my-2.5 flex min-h-[68px] flex-1 items-end justify-between gap-1.5 px-0.5">
           {bars.map((val, i) => (
-            <div key={i} className="relative flex h-full flex-1 items-end rounded-full bg-white/[0.07]">
+            <div
+              key={i}
+              className="relative flex h-full flex-1 items-end rounded-full bg-white/[0.07]"
+            >
               <div
                 className={cn(
                   'w-full rounded-full transition-all duration-300',
@@ -544,7 +562,7 @@ function NormalizationVisual() {
           ))}
         </div>
 
-        <div className="mt-1.5 flex items-center justify-between font-mono text-[9px] text-[#8c786e]">
+        <div className="flex w-full items-center justify-between gap-2 font-mono text-[10px] text-[#8c786e]">
           <span className="whitespace-nowrap">
             Headroom: {enabled ? activeConfig.headroom : '+2.4 dB'}
           </span>

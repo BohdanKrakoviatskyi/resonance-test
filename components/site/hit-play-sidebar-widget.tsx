@@ -239,12 +239,12 @@ export function HitPlaySidebarWidget() {
         </button>
       </div>
 
-      {/* Контентная панель с кастомным тонким скроллбаром без стрелок */}
-      <div className="mt-2.5 h-[196px] flex-1 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
+      {/* Контентная панель с полностью скрытым скроллбаром и полной высотой */}
+      <div className="mt-2.5 flex min-h-[250px] flex-1 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
         {activeTab === 'up-next' ? (
           <ul
             aria-label="Up next queue"
-            className="custom-queue-scroll h-full space-y-1 overflow-y-auto pr-1"
+            className="custom-queue-scroll flex h-full flex-1 flex-col gap-1 overflow-y-auto"
           >
             {UP_NEXT_TRACKS.map((track, idx) => {
               const isPlaying = idx === selectedIndex

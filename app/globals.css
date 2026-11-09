@@ -155,27 +155,13 @@
   animation: wave-drift 1.1s linear infinite;
 }
 
-/* Custom thin scrollbar without arrow buttons for Up next queue */
+/* Hide scrollbars completely on sidebar & queue lists */
 .custom-queue-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(245, 208, 197, 0.22) transparent;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .custom-queue-scroll::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-.custom-queue-scroll::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
-}
-.custom-queue-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-queue-scroll::-webkit-scrollbar-thumb {
-  background: rgba(245, 208, 197, 0.24);
-  border-radius: 9999px;
-}
-.custom-queue-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 208, 197, 0.42);
 }
