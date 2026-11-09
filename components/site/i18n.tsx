@@ -255,7 +255,7 @@ export const translations = {
         scStats: '840 треков · 11 плейлистов',
         ytStats: '142 трека · 4 микса',
         synced: 'Синхронизация Resonance',
-        mergeSub: 'Слияние медиатеки в реальном времени',
+        mergeSub: 'Общая живая медиатека',
         syncedPct: '100% синхр.',
         oauthNote: 'Прямая OAuth2-сессия · Без ключей',
       },

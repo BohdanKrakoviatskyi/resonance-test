@@ -170,15 +170,15 @@ function ConnectVisual() {
 
       {/* Sync status panel — segmented warm peach indicator instead of gradient */}
       <div className="flex w-full flex-1 flex-col justify-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 px-[10px] py-3">
-        <div className="flex items-center gap-2">
-          <span className="grid size-7 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-black">
+        <div className="flex items-center gap-[8px]">
+          <span className="grid size-[28px] shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-black">
             <LogoMark className="size-5 rounded-none" />
           </span>
           <div className="min-w-0">
-            <p className="text-[12px] font-bold leading-tight tracking-tight whitespace-nowrap text-white">
+            <p className="text-[11.5px] font-bold leading-tight tracking-[-0.02em] whitespace-nowrap text-white">
               {t.howItWorks.step1.synced}
             </p>
-            <p className="mt-0.5 text-[10px] leading-tight whitespace-nowrap text-[#b8a49a]">
+            <p className="mt-0.5 text-[10.5px] leading-tight whitespace-nowrap text-[#b8a49a]">
               {t.howItWorks.step1.mergeSub}
             </p>
           </div>
