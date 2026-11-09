@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
-
 const GITHUB_OWNER = 'BohdanKrakoviatskyi'
 const GITHUB_REPO = 'Resonance'
 const LATEST_RELEASE_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`
