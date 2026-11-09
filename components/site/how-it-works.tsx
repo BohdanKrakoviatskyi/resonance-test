@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, type PointerEvent } from 'react'
-import { ArrowDownUp, Check, Heart, SlidersHorizontal } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Check, Heart, Volume1, Volume2 } from 'lucide-react'
 import { HitPlaySidebarWidget } from './hit-play-sidebar-widget'
 import { useI18n } from './i18n'
 import {
@@ -9,8 +10,6 @@ import {
   LogoMark,
   Reveal,
   SectionHeading,
-  SoundCloudBadge,
-  YouTubeMusicBadge,
 } from './primitives'
 import { cn } from '@/lib/utils'
 
@@ -31,7 +30,7 @@ export function HowItWorks() {
     {
       title: t.howItWorks.step3.title,
       description: t.howItWorks.step3.description,
-      visual: <TuneVisual />,
+      visual: <NormalizationVisual />,
     },
     {
       title: t.howItWorks.step4.title,
@@ -72,204 +71,485 @@ export function HowItWorks() {
   )
 }
 
+// ============================================================================
+// 01: ПЛОТНЫЙ ИНТЕРАКТИВНЫЙ ВИДЖЕТ АККАУНТОВ И СИНХРОНИЗАЦИИ
+// ============================================================================
 function ConnectVisual() {
   const { t } = useI18n()
+  const [scLinked, setScLinked] = useState(true)
+  const [ytLinked, setYtLinked] = useState(true)
+
+  const syncPct = scLinked && ytLinked ? 100 : scLinked || ytLinked ? 50 : 0
+
   return (
-    <div className="flex h-full flex-1 flex-col justify-between rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-4 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.08)]">
-      {/* SoundCloud card */}
-      <div className="flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3.5 py-3">
-        <div>
-          <SoundCloudBadge className="text-xs" />
-          <p className="mt-1 font-mono text-[10px] text-muted-foreground">
-            likes · reposts · sets
-          </p>
+    <div className="flex h-full flex-1 flex-col gap-2.5 rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
+      {/* SoundCloud account card */}
+      <div className="rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-[#ff5500]/15 text-[#ff5500] ring-1 ring-[#ff5500]/30">
+              <svg aria-hidden="true" viewBox="0 0 24 14" fill="currentColor" className="h-3 w-4">
+                <path d="M1.5 7.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3 1a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm6.25-3A4.75 4.75 0 0 1 21.4 5.3a3.25 3.25 0 0 1-.15 6.45H13.5a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .5-.7 4.73 4.73 0 0 1 3.5-1.05Z" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-bold leading-tight text-white">SoundCloud</p>
+              <p className="mt-0.5 truncate font-mono text-[10px] leading-tight whitespace-nowrap text-[#b8a49a]">
+                likes • reposts • sets
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setScLinked((v) => !v)}
+            className={cn(
+              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold whitespace-nowrap transition-all',
+              scLinked
+                ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
+                : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
+            )}
+          >
+            {scLinked && <Check className="size-3 shrink-0" />}
+            <span>{scLinked ? t.howItWorks.step1.linked : t.howItWorks.step1.Paused}</span>
+          </button>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 font-mono text-[10px] font-medium text-emerald-400">
-          <Check className="size-3" /> {t.howItWorks.step1.linked}
-        </span>
+
+        <div className="mt-2.5 flex items-center justify-between border-t border-white/[0.06] pt-2 font-mono text-[10px] text-[#a8948a]">
+          <span className="whitespace-nowrap">{t.howItWorks.step1.scStats}</span>
+          <span className="text-[#ff5500]">OAuth 2.0</span>
+        </div>
       </div>
 
-      {/* Central sync node */}
-      <div className="relative my-2 flex flex-col items-center justify-center py-2">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-[#ff5500]/50 via-primary/70 to-[#ff0033]/50"
-        />
-        <div className="relative z-10 flex items-center gap-2 rounded-2xl border border-white/15 bg-[#1c130f] px-3.5 py-2 shadow-[0_0_25px_oklch(0.88_0.07_55/25%)]">
-          <LogoMark className="size-5" />
-          <span className="text-xs font-semibold text-foreground">
-            {t.howItWorks.step1.synced}
+      {/* YouTube Music account card */}
+      <div className="rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-[#ff0033]/15 text-[#ff0033] ring-1 ring-[#ff0033]/30">
+              <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-4">
+                <circle cx="8" cy="8" r="7.5" fill="#ff0033" />
+                <circle cx="8" cy="8" r="4.2" stroke="white" strokeOpacity="0.9" strokeWidth="1" />
+                <path d="M6.8 5.9L10.3 8L6.8 10.1V5.9Z" fill="white" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-bold leading-tight text-white">YouTube Music</p>
+              <p className="mt-0.5 truncate font-mono text-[10px] leading-tight whitespace-nowrap text-[#b8a49a]">
+                playlists • albums • mixes
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setYtLinked((v) => !v)}
+            className={cn(
+              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold whitespace-nowrap transition-all',
+              ytLinked
+                ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
+                : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
+            )}
+          >
+            {ytLinked && <Check className="size-3 shrink-0" />}
+            <span>{ytLinked ? t.howItWorks.step1.linked : t.howItWorks.step1.Paused}</span>
+          </button>
+        </div>
+
+        <div className="mt-2.5 flex items-center justify-between border-t border-white/[0.06] pt-2 font-mono text-[10px] text-[#a8948a]">
+          <span className="whitespace-nowrap">{t.howItWorks.step1.ytStats}</span>
+          <span className="text-[#ff0033]">OAuth 2.0</span>
+        </div>
+      </div>
+
+      {/* Sync status panel filling remaining height without empty gaps */}
+      <div className="flex flex-1 flex-col justify-between rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-3">
+        <div className="flex items-center gap-2.5">
+          <span className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-black">
+            <LogoMark className="size-6 rounded-none" />
           </span>
-          <ArrowDownUp className="size-3.5 text-primary" aria-hidden="true" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-bold leading-tight text-white">
+              {t.howItWorks.step1.synced}
+            </p>
+            <p className="mt-0.5 truncate text-[10px] leading-tight text-[#b8a49a]">
+              {t.howItWorks.step1.mergeSub}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* YouTube Music card */}
-      <div className="flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3.5 py-3">
-        <div>
-          <YouTubeMusicBadge className="text-xs" />
-          <p className="mt-1 font-mono text-[10px] text-muted-foreground">
-            playlists · albums · mixes
-          </p>
+        <div className="mt-2.5 space-y-1.5">
+          <div className="flex items-center justify-between font-mono text-[10px]">
+            <span className="text-[#b8a49a]">
+              {scLinked && ytLinked ? '982 tracks indexed' : scLinked ? '840 tracks indexed' : ytLinked ? '142 tracks indexed' : 'Paused'}
+            </span>
+            <span className="font-semibold text-[#f5d0c5] whitespace-nowrap">
+              {syncPct}% synced
+            </span>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#ff5500] via-[#f5d0c5] to-[#ff0033] transition-all duration-500"
+              style={{ width: `${syncPct}%` }}
+            />
+          </div>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 font-mono text-[10px] font-medium text-emerald-400">
-          <Check className="size-3" /> {t.howItWorks.step1.linked}
-        </span>
-      </div>
 
-      {/* Bottom status note */}
-      <div className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] py-2 font-mono text-[10px] text-muted-foreground">
-        <span className="size-1.5 rounded-full bg-emerald-400" />
-        <span>{t.howItWorks.step1.oauthNote}</span>
+        <div className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-black/35 px-2.5 py-1.5 font-mono text-[10px] text-[#c7b3a9]">
+          <span className="size-1.5 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+          <span className="truncate whitespace-nowrap">{t.howItWorks.step1.oauthNote}</span>
+        </div>
       </div>
     </div>
   )
 }
+
+// ============================================================================
+// 02: ТОЧНАЯ МИНИ-КОПИЯ САЙДБАРА С РЕАЛЬНЫМИ ОБЛОЖКАМИ И ФИЛЬТРАМИ
+// ============================================================================
+interface SidebarPlaylist {
+  id: string
+  name: string
+  count: number
+  source: 'fav' | 'sc' | 'yt'
+  cover?: string
+}
+
+const SIDEBAR_PLAYLISTS: SidebarPlaylist[] = [
+  { id: 'fav', name: 'Favorites', count: 533, source: 'fav' },
+  { id: 'vajbik-main', name: 'Vajbik :/', count: 45, source: 'sc', cover: '/images/playlists/vajbik.png' },
+  { id: 'stalker', name: 'Stalker 2: Radio', count: 40, source: 'sc', cover: '/images/playlists/stalker.png' },
+  { id: 'johan', name: 'Johan x goddamn', count: 6, source: 'yt', cover: '/images/playlists/johan.png' },
+  { id: '1448', name: '1448', count: 255, source: 'sc', cover: '/images/playlists/p1448.png' },
+  { id: 'dm', name: 'dm', count: 170, source: 'sc', cover: '/images/playlists/dm.png' },
+  { id: 'hardstyle', name: 'HardStyle', count: 25, source: 'sc', cover: '/images/playlists/hardstyle.png' },
+]
 
 function LibraryVisual() {
   const { t } = useI18n()
-  const [activeIdx, setActiveIdx] = useState(1)
+  const [filter, setFilter] = useState<'all' | 'sc' | 'yt'>('all')
+  const [activeId, setActiveId] = useState<string>('vajbik-main')
 
-  const rows = [
-    { name: t.howItWorks.step2.favoritesName, count: 533, source: 'fav' as const },
-    { name: 'Vajbik :/', count: 45, source: 'sc' as const },
-    { name: 'Stalker 2: Radio', count: 40, source: 'sc' as const },
-    { name: 'Johan x goddamn', count: 6, source: 'yt' as const },
-    { name: 'dm', count: 170, source: 'sc' as const },
-    { name: 'Vajbik', count: 17, source: 'sc' as const },
-  ]
+  const filtered = SIDEBAR_PLAYLISTS.filter((item) => {
+    if (filter === 'all') return true
+    if (filter === 'sc') return item.source === 'sc' || item.source === 'fav'
+    return item.source === 'yt' || item.source === 'fav'
+  })
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.08)] select-none">
-      <div className="mb-2 flex items-center justify-between px-2 pt-0.5 text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-        <span>Playlists</span>
-        <span className="font-mono text-primary">SC + YTM</span>
-      </div>
-
-      <ul className="flex flex-1 flex-col justify-between gap-1">
-        {rows.map((row, idx) => {
-          const active = idx === activeIdx
-          return (
-            <li key={row.name}>
+    <div className="flex h-full flex-1 flex-col rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
+      {/* Sidebar header + [ All ] [ SC ] [ YTM ] filter tabs */}
+      <div className="flex items-center justify-between gap-2 px-1 pb-2.5">
+        <span className="text-[10px] font-bold tracking-[0.14em] text-[#b8a49a] uppercase">
+          PLAYLISTS
+        </span>
+        <div className="flex items-center gap-1 rounded-full border border-white/[0.07] bg-black/35 p-0.5">
+          {(
+            [
+              { key: 'all', label: t.howItWorks.step2.filterAll },
+              { key: 'sc', label: 'SC' },
+              { key: 'yt', label: 'YTM' },
+            ] as const
+          ).map((tab) => {
+            const active = filter === tab.key
+            return (
               <button
+                key={tab.key}
                 type="button"
-                onClick={() => setActiveIdx(idx)}
+                onClick={() => setFilter(tab.key)}
                 className={cn(
-                  'flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-all duration-200',
+                  'cursor-pointer rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold whitespace-nowrap transition-all',
                   active
-                    ? 'bg-[#3d2b22] font-semibold text-[#f5d0c5] shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)]'
-                    : 'bg-white/[0.02] text-muted-foreground hover:bg-white/[0.06] hover:text-foreground',
+                    ? 'bg-[#f5d0c5] text-[#21130d]'
+                    : 'text-[#a8948a] hover:text-white',
                 )}
               >
-                <span className="flex items-center gap-2.5 truncate">
-                  {row.source === 'fav' ? (
-                    <Heart className="size-3.5 shrink-0 fill-current text-primary" />
-                  ) : (
-                    <span
-                      className="size-2 shrink-0 rounded-full"
-                      style={{
-                        background: row.source === 'sc' ? '#ff5500' : '#ff0033',
-                      }}
-                    />
-                  )}
-                  <span className="truncate">{row.name}</span>
-                </span>
-                <span className="ml-2 shrink-0 font-mono text-[10px] opacity-75">
-                  {row.count} {t.howItWorks.step2.tracksUnit}
-                </span>
+                {tab.label}
               </button>
-            </li>
-          )
-        })}
-      </ul>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Dense playlist list (gap: 6px, no space-between!) */}
+      <div className="flex-1 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
+        <ul className="custom-queue-scroll flex h-[282px] flex-col gap-1.5 overflow-y-auto pr-1">
+          {filtered.map((item) => {
+            const active = item.id === activeId
+            return (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  className={cn(
+                    'flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-2 py-1.5 text-left transition-all duration-200',
+                    active
+                      ? 'bg-[#3d2b22]/90 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.08)]'
+                      : 'hover:bg-white/[0.05]',
+                  )}
+                >
+                  {/* 36x36 rounded square cover */}
+                  {item.source === 'fav' ? (
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-sky-400/25 bg-gradient-to-br from-sky-400/25 via-cyan-500/15 to-[#251813] text-sky-300 shadow-inner">
+                      <Heart className="size-4 fill-current" aria-hidden="true" />
+                    </span>
+                  ) : (
+                    <div className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/40">
+                      <Image
+                        src={item.cover!}
+                        alt={item.name}
+                        width={72}
+                        height={72}
+                        className="size-full object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Two-line title + platform icon & track count */}
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={cn(
+                        'truncate text-xs font-bold leading-tight transition-colors',
+                        active ? 'text-[#f5d0c5]' : 'text-white/90',
+                      )}
+                    >
+                      {item.source === 'fav' ? t.howItWorks.step2.favoritesName : item.name}
+                    </p>
+                    <div className="mt-0.5 flex items-center gap-1.5 text-[10px] leading-tight text-[#a8948a]">
+                      {item.source === 'sc' && (
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 14"
+                          fill="#ff5500"
+                          className="h-2.5 w-3.5 shrink-0"
+                        >
+                          <path d="M1.5 7.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3 1a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm6.25-3A4.75 4.75 0 0 1 21.4 5.3a3.25 3.25 0 0 1-.15 6.45H13.5a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .5-.7 4.73 4.73 0 0 1 3.5-1.05Z" />
+                        </svg>
+                      )}
+                      {item.source === 'yt' && (
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          className="size-3 shrink-0"
+                        >
+                          <circle cx="8" cy="8" r="7.5" fill="#ff0033" />
+                          <circle cx="8" cy="8" r="4.2" stroke="white" strokeOpacity="0.9" strokeWidth="1" />
+                          <path d="M6.8 5.9L10.3 8L6.8 10.1V5.9Z" fill="white" />
+                        </svg>
+                      )}
+                      {item.source === 'fav' && (
+                        <span className="size-1.5 shrink-0 rounded-full bg-sky-400" />
+                      )}
+                      <span className="truncate whitespace-nowrap">
+                        {item.count} {t.howItWorks.step2.tracksUnit}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </div>
   )
 }
 
-function TuneVisual() {
-  const { t } = useI18n()
-  const [levels, setLevels] = useState<number[]>([82, 68, 52, 46, 64, 76, 88])
-  const [custom, setCustom] = useState(false)
-  const [dragging, setDragging] = useState<number | null>(null)
+// ============================================================================
+// 03: ИНТЕРАКТИВНЫЙ ВИДЖЕТ AUDIO NORMALIZATION (ТОЧНО ПО СКРИНШОТУ НАСТРОЕК)
+// ============================================================================
+type LufsKey = 'quiet' | 'standard' | 'loud'
 
-  const updateBar = (index: number, e: PointerEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const raw = 1 - (e.clientY - rect.top) / rect.height
-    const val = Math.round(Math.max(12, Math.min(95, raw * 100)))
-    setLevels((prev) => {
-      const next = [...prev]
-      next[index] = val
-      return next
-    })
-    setCustom(true)
+const LUFS_CONFIG: Record<
+  LufsKey,
+  {
+    lufs: string
+    headroom: string
+    bars: number[]
   }
+> = {
+  quiet: {
+    lufs: '-18 LUFS',
+    headroom: '-2.0 dB',
+    bars: [42, 46, 44, 48, 45, 43, 47, 45, 44, 46, 43, 45],
+  },
+  standard: {
+    lufs: '-14 LUFS',
+    headroom: '-1.0 dB',
+    bars: [66, 70, 68, 72, 69, 67, 71, 68, 70, 69, 67, 70],
+  },
+  loud: {
+    lufs: '-11 LUFS',
+    headroom: '-0.3 dB',
+    bars: [86, 90, 88, 92, 89, 87, 91, 88, 90, 89, 87, 90],
+  },
+}
+
+const RAW_UNNORMALIZED_BARS = [24, 96, 30, 98, 22, 92, 35, 99, 28, 95, 25, 97]
+
+function SoundwaveBadgeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 20 20"
+      fill="none"
+      className={cn('size-4', className)}
+    >
+      <rect x="2.5" y="8" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="6" y="5" width="2" height="10" rx="1" fill="currentColor" />
+      <rect x="9.5" y="2.5" width="2" height="15" rx="1" fill="currentColor" />
+      <rect x="13" y="5.5" width="2" height="9" rx="1" fill="currentColor" />
+      <rect x="16.5" y="8" width="2" height="4" rx="1" fill="currentColor" />
+    </svg>
+  )
+}
+
+function NormalizationVisual() {
+  const { t } = useI18n()
+  const [enabled, setEnabled] = useState(true)
+  const [target, setTarget] = useState<LufsKey>('standard')
+
+  const activeConfig = LUFS_CONFIG[target]
+  const bars = enabled ? activeConfig.bars : RAW_UNNORMALIZED_BARS
 
   return (
-    <div className="flex h-full flex-1 flex-col justify-between rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.08)] select-none">
-      {/* Top status chips: Crossfade 5 s + preset indicator */}
-      <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-2.5 py-1 font-mono text-[10px] font-medium text-foreground">
-          <SlidersHorizontal className="size-3 text-primary" aria-hidden="true" />
-          {t.howItWorks.step3.crossfadeChip}
+    <div className="flex h-full flex-1 flex-col justify-between rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
+      {/* Header matching app screenshot: square soundwave icon + title + subtitle */}
+      <div className="flex items-center gap-2.5">
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#38271f] text-[#f7d2c4] shadow-inner">
+          <SoundwaveBadgeIcon className="size-4" />
         </span>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-bold leading-tight text-white">
+            {t.howItWorks.step3.widgetTitle}
+          </p>
+          <p className="mt-0.5 truncate text-[10px] leading-tight text-[#b8a49a]">
+            {t.howItWorks.step3.widgetSub}
+          </p>
+        </div>
+      </div>
+
+      {/* Enabled / Disabled 2-pill toggle row */}
+      <div className="mt-2.5 grid grid-cols-2 gap-1.5">
         <button
           type="button"
-          onClick={() => {
-            setLevels([82, 68, 52, 46, 64, 76, 88])
-            setCustom(false)
-          }}
+          onClick={() => setEnabled(true)}
           className={cn(
-            'rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition-colors',
-            custom
-              ? 'bg-primary text-primary-foreground'
-              : 'border border-white/10 bg-white/[0.04] text-primary',
+            'flex cursor-pointer items-center justify-center gap-1.5 rounded-full py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+            enabled
+              ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
+              : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
           )}
         >
-          {custom ? t.howItWorks.step3.presetCustom : t.howItWorks.step3.presetWarm}
+          <Check className="size-3 shrink-0 stroke-[2.5]" aria-hidden="true" />
+          <span>{t.howItWorks.step3.enabled}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setEnabled(false)}
+          className={cn(
+            'flex cursor-pointer items-center justify-center rounded-full py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+            !enabled
+              ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
+              : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
+          )}
+        >
+          <span>{t.howItWorks.step3.disabled}</span>
         </button>
       </div>
 
-      {/* Tall interactive equalizer sliders */}
-      <div className="mt-3 flex flex-1 items-end justify-between gap-2 rounded-2xl border border-white/[0.05] bg-black/35 px-3.5 py-4">
-        {levels.map((level, i) => (
-          <div
-            key={i}
-            role="slider"
-            tabIndex={0}
-            aria-label={`Band ${i + 1}`}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={level}
-            onPointerDown={(e) => {
-              e.currentTarget.setPointerCapture(e.pointerId)
-              setDragging(i)
-              updateBar(i, e)
-            }}
-            onPointerMove={(e) => {
-              if (dragging === i) updateBar(i, e)
-            }}
-            onPointerUp={() => setDragging(null)}
-            onPointerCancel={() => setDragging(null)}
-            className="group relative flex h-full flex-1 cursor-ns-resize flex-col items-center justify-end touch-none"
+      {/* Target loudness section with 3 non-wrapping LUFS pills */}
+      <div className="mt-2.5">
+        <p className="px-0.5 text-[10px] font-bold tracking-tight text-white/90">
+          {t.howItWorks.step3.targetLoudness}
+        </p>
+
+        <div className="mt-1.5 flex flex-col gap-1.5">
+          {(
+            [
+              {
+                key: 'quiet' as const,
+                label: t.howItWorks.step3.quiet,
+                icon: <Volume1 className="size-3.5 shrink-0" />,
+              },
+              {
+                key: 'standard' as const,
+                label: t.howItWorks.step3.standard,
+                icon: <SoundwaveBadgeIcon className="size-3.5 shrink-0" />,
+              },
+              {
+                key: 'loud' as const,
+                label: t.howItWorks.step3.loud,
+                icon: <Volume2 className="size-3.5 shrink-0" />,
+              },
+            ]
+          ).map((item) => {
+            const isSelected = enabled && target === item.key
+            return (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => {
+                  setEnabled(true)
+                  setTarget(item.key)
+                }}
+                className={cn(
+                  'flex w-full cursor-pointer items-center justify-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold whitespace-nowrap transition-all duration-200',
+                  isSelected
+                    ? 'bg-[#f7d2c4] text-[#21130d] shadow-sm'
+                    : 'bg-[#2a1d17] text-[#b8a49a] hover:bg-[#34241d] hover:text-white',
+                )}
+              >
+                {item.icon}
+                <span className="whitespace-nowrap">{item.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Live Loudness Meter / Gain Reduction visualizer at the bottom */}
+      <div className="mt-2.5 rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-2.5">
+        <div className="flex items-center justify-between font-mono text-[9px] text-[#b8a49a]">
+          <span className="whitespace-nowrap">
+            {enabled ? `Target: ${activeConfig.lufs}` : 'Raw peaks (clipping)'}
+          </span>
+          <span
+            className={cn(
+              'font-semibold whitespace-nowrap',
+              enabled ? 'text-[#f7d2c4]' : 'text-amber-400',
+            )}
           >
-            <div className="relative w-2 flex-1 rounded-full bg-white/10 transition-colors group-hover:bg-white/15">
+            {enabled ? t.howItWorks.step3.limiterActive : t.howItWorks.step3.limiterBypassed}
+          </span>
+        </div>
+
+        {/* Dynamic peak comparison bars */}
+        <div className="mt-2 flex h-9 items-end justify-between gap-1 px-0.5">
+          {bars.map((val, i) => (
+            <div key={i} className="relative flex h-full flex-1 items-end rounded-full bg-white/[0.07]">
               <div
                 className={cn(
-                  'absolute inset-x-0 bottom-0 rounded-full bg-gradient-to-t from-primary/45 to-primary',
-                  dragging === null && 'transition-[height] duration-300',
+                  'w-full rounded-full transition-all duration-300',
+                  enabled
+                    ? 'bg-gradient-to-t from-[#f7d2c4]/40 to-[#f7d2c4]'
+                    : val > 90
+                      ? 'bg-gradient-to-t from-amber-500/50 to-red-400'
+                      : 'bg-white/30',
                 )}
-                style={{ height: `${level}%` }}
-              />
-              <div
-                className={cn(
-                  'absolute left-1/2 size-3.5 -translate-x-1/2 translate-y-1/2 rounded-full border border-[#1c130f] bg-foreground shadow-[0_0_10px_oklch(0.88_0.07_55/75%)] transition-transform group-hover:scale-125',
-                  dragging === null && 'transition-[bottom,transform] duration-300',
-                )}
-                style={{ bottom: `${level}%` }}
+                style={{ height: `${val}%` }}
               />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        <div className="mt-1.5 flex items-center justify-between font-mono text-[9px] text-[#8c786e]">
+          <span className="whitespace-nowrap">
+            Headroom: {enabled ? activeConfig.headroom : '+2.4 dB'}
+          </span>
+          <span className="whitespace-nowrap">True Peak DSP</span>
+        </div>
       </div>
     </div>
   )
