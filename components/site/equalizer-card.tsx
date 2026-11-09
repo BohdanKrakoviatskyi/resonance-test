@@ -102,7 +102,7 @@ export function EqualizerCard() {
                 key={bands[i]}
                 className="relative z-10 flex h-full flex-1 flex-col items-center gap-2.5"
               >
-                {/* Interactive vertical track */}
+                {/* Interactive vertical track — touch-pan-y on mobile so vertical page scrolling is never blocked */}
                 <div
                   role="slider"
                   tabIndex={0}
@@ -110,12 +110,17 @@ export function EqualizerCard() {
                   aria-valuemin={-12}
                   aria-valuemax={12}
                   aria-valuenow={Math.round(((level - 50) / 50) * 12)}
+                  onClick={(e) => {
+                    updateBandFromPointer(i, e as unknown as PointerEvent<HTMLDivElement>)
+                  }}
                   onPointerDown={(e) => {
+                    if (e.pointerType === 'touch') return
                     e.currentTarget.setPointerCapture(e.pointerId)
                     setDraggingBand(i)
                     updateBandFromPointer(i, e)
                   }}
                   onPointerMove={(e) => {
+                    if (e.pointerType === 'touch') return
                     if (draggingBand === i) {
                       updateBandFromPointer(i, e)
                     }
@@ -135,7 +140,7 @@ export function EqualizerCard() {
                       setPreset('Custom')
                     }
                   }}
-                  className="group relative flex h-full w-full cursor-ns-resize justify-center touch-none py-1"
+                  className="group relative flex h-full w-full cursor-pointer justify-center touch-pan-y py-1 md:cursor-ns-resize md:touch-none"
                 >
                   {/* Track groove */}
                   <div className="relative h-full w-2.5 rounded-full bg-white/[0.09] transition-colors group-hover:bg-white/[0.15]">

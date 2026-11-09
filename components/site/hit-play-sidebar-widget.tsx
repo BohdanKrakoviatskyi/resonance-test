@@ -348,11 +348,16 @@ export function HitPlaySidebarWidget() {
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={scrubProgress}
-                  onPointerDown={updateScrubFromEvent}
+                  onClick={updateScrubFromEvent as unknown as (e: React.MouseEvent<HTMLDivElement>) => void}
+                  onPointerDown={(e) => {
+                    if (e.pointerType === 'touch') return
+                    updateScrubFromEvent(e)
+                  }}
                   onPointerMove={(e) => {
+                    if (e.pointerType === 'touch') return
                     if (e.buttons === 1) updateScrubFromEvent(e)
                   }}
-                  className="relative flex h-4 flex-1 cursor-pointer items-center touch-none"
+                  className="relative flex h-4 flex-1 cursor-pointer items-center touch-pan-y"
                 >
                   <div className="h-[2.5px] w-full rounded-full bg-white/15" />
                   <div

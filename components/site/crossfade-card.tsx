@@ -57,7 +57,7 @@ export function CrossfadeCard() {
           step={1}
           value={seconds}
           onChange={(event) => setSeconds(Number(event.target.value))}
-          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-[oklch(0.88_0.07_55)]"
+          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-[oklch(0.88_0.07_55)] touch-pan-y"
         />
       </div>
     </GlassCard>
