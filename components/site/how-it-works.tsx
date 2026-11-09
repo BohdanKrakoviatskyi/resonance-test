@@ -80,20 +80,21 @@ function ConnectVisual() {
   const [ytLinked, setYtLinked] = useState(true)
 
   const syncPct = scLinked && ytLinked ? 100 : scLinked || ytLinked ? 50 : 0
+  const activeSegments = scLinked && ytLinked ? 14 : scLinked || ytLinked ? 7 : 0
 
   return (
     <div className="flex h-full flex-1 flex-col gap-2.5 rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
       {/* SoundCloud account card */}
-      <div className="w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
-        {/* Row 1: 28x28 icon + platform name on left, compact Linked badge on right */}
-        <div className="flex w-full items-center justify-between gap-1.5">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-7 shrink-0 place-items-center rounded-xl bg-[#ff5500]/15 text-[#ff5500] ring-1 ring-[#ff5500]/30">
+      <div className="w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 px-[10px] py-2.5">
+        {/* Row 1: 26x26 icon + platform name on left, compact Linked badge on right with guaranteed gap */}
+        <div className="flex w-full items-center justify-between">
+          <div className="flex min-w-0 items-center gap-[6px]">
+            <span className="grid size-[26px] shrink-0 place-items-center rounded-lg bg-[#ff5500]/15 text-[#ff5500] ring-1 ring-[#ff5500]/30">
               <svg aria-hidden="true" viewBox="0 0 24 14" fill="currentColor" className="h-2.5 w-3.5">
                 <path d="M1.5 7.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3 1a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm6.25-3A4.75 4.75 0 0 1 21.4 5.3a3.25 3.25 0 0 1-.15 6.45H13.5a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .5-.7 4.73 4.73 0 0 1 3.5-1.05Z" />
               </svg>
             </span>
-            <span className="text-[12.5px] font-bold leading-tight tracking-tight whitespace-nowrap text-white">
+            <span className="text-[12px] font-bold leading-tight tracking-[-0.02em] whitespace-nowrap text-white">
               SoundCloud
             </span>
           </div>
@@ -102,7 +103,7 @@ function ConnectVisual() {
             type="button"
             onClick={() => setScLinked((v) => !v)}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-[7px] py-[2px] font-mono text-[10px] font-semibold tracking-tight whitespace-nowrap transition-all',
+              'ml-2 inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-[6px] py-[2px] font-mono text-[10px] font-semibold tracking-tight whitespace-nowrap transition-all',
               scLinked
                 ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
                 : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
@@ -125,18 +126,18 @@ function ConnectVisual() {
       </div>
 
       {/* YouTube Music account card */}
-      <div className="w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 p-3">
-        {/* Row 1: 28x28 icon + platform name on left, compact Linked badge on right */}
-        <div className="flex w-full items-center justify-between gap-1.5">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-7 shrink-0 place-items-center rounded-xl bg-[#ff0033]/15 text-[#ff0033] ring-1 ring-[#ff0033]/30">
+      <div className="w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1a110d]/95 px-[10px] py-2.5">
+        {/* Row 1: 26x26 icon + platform name on left, compact Linked badge on right with guaranteed gap */}
+        <div className="flex w-full items-center justify-between">
+          <div className="flex min-w-0 items-center gap-[6px]">
+            <span className="grid size-[26px] shrink-0 place-items-center rounded-lg bg-[#ff0033]/15 text-[#ff0033] ring-1 ring-[#ff0033]/30">
               <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-3.5">
                 <circle cx="8" cy="8" r="7.5" fill="#ff0033" />
                 <circle cx="8" cy="8" r="4.2" stroke="white" strokeOpacity="0.9" strokeWidth="1" />
                 <path d="M6.8 5.9L10.3 8L6.8 10.1V5.9Z" fill="white" />
               </svg>
             </span>
-            <span className="text-[12.5px] font-bold leading-tight tracking-tight whitespace-nowrap text-white">
+            <span className="text-[12px] font-bold leading-tight tracking-[-0.02em] whitespace-nowrap text-white">
               YouTube Music
             </span>
           </div>
@@ -145,7 +146,7 @@ function ConnectVisual() {
             type="button"
             onClick={() => setYtLinked((v) => !v)}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-[7px] py-[2px] font-mono text-[10px] font-semibold tracking-tight whitespace-nowrap transition-all',
+              'ml-2 inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-[6px] py-[2px] font-mono text-[10px] font-semibold tracking-tight whitespace-nowrap transition-all',
               ytLinked
                 ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25'
                 : 'bg-white/[0.06] text-muted-foreground hover:bg-white/10 hover:text-white',
@@ -167,7 +168,7 @@ function ConnectVisual() {
         </div>
       </div>
 
-      {/* Sync status panel — single-line headings & single-line bottom capsule */}
+      {/* Sync status panel — segmented warm peach indicator instead of gradient */}
       <div className="flex w-full flex-1 flex-col justify-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-3">
         <div className="flex items-center gap-2">
           <span className="grid size-7 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-black">
@@ -183,8 +184,8 @@ function ConnectVisual() {
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <div className="flex w-full items-center justify-between gap-1 font-mono text-[10px] tracking-tight">
+        <div className="w-full space-y-2">
+          <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-tight">
             <span className="whitespace-nowrap text-[#b8a49a]">
               {scLinked && ytLinked
                 ? '982 tracks indexed'
@@ -198,11 +199,30 @@ function ConnectVisual() {
               {syncPct}% synced
             </span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-[#ff5500] via-[#f5d0c5] to-[#ff0033] transition-all duration-500"
-              style={{ width: `${syncPct}%` }}
-            />
+
+          {/* Segmented VU-style capsule bar in warm peach #F5D0C5 */}
+          <div className="flex w-full items-center gap-1 rounded-lg bg-white/[0.04] p-1">
+            {Array.from({ length: 14 }).map((_, i) => {
+              const isFilled = i < activeSegments
+              const opacity =
+                !isFilled
+                  ? 0.1
+                  : i === activeSegments - 1
+                    ? 0.65
+                    : i === activeSegments - 2
+                      ? 0.82
+                      : 1
+              return (
+                <span
+                  key={i}
+                  className="h-2 flex-1 rounded-[3px] transition-all duration-300"
+                  style={{
+                    backgroundColor: isFilled ? '#F5D0C5' : '#ffffff',
+                    opacity,
+                  }}
+                />
+              )
+            })}
           </div>
         </div>
 
