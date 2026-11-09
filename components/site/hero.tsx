@@ -75,14 +75,23 @@ export function Hero() {
       </div>
 
       {/* Ribbed dunes / soundwave horizon background with glowing RS emblem */}
-      <div className="relative -mt-6 aspect-[16/9] w-full min-h-[340px] md:-mt-14 md:aspect-[2.3/1]">
+      <div className="relative -mt-4 aspect-[16/9] w-full min-h-[360px] md:-mt-10 md:aspect-[2.25/1]">
         <Image
           src="/images/hero-dunes.png"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover [mask-image:linear-gradient(to_bottom,transparent_0%,black_28%,black_72%,transparent_100%)]"
+          className="object-cover [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]"
+        />
+        {/* Extra seamless top & bottom feathering into the page background */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-background via-background/75 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-background via-background/70 to-transparent"
         />
         <div className="absolute top-[53%] left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="animate-beam-pulse absolute -inset-12 rounded-full bg-primary/25 blur-3xl" />
