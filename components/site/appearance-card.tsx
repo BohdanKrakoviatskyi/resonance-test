@@ -1,22 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart, Pause, Repeat, Shuffle, SkipBack, SkipForward } from 'lucide-react'
-import { GlassCard, SoundCloudBadge, WavySeekbar } from './primitives'
+import Image from 'next/image'
+import { GlassCard } from './primitives'
 import { cn } from '@/lib/utils'
 
 const themes = [
-  { name: 'Ember', hue: 45 },
-  { name: 'Rose', hue: 10 },
-  { name: 'Moss', hue: 145 },
-  { name: 'Ocean', hue: 235 },
-  { name: 'Violet', hue: 300 },
+  { name: 'Ember', hue: 45, rotate: 0 },
+  { name: 'Rose', hue: 10, rotate: -35 },
+  { name: 'Moss', hue: 145, rotate: 95 },
+  { name: 'Ocean', hue: 235, rotate: 185 },
+  { name: 'Violet', hue: 300, rotate: 250 },
 ]
 
 export function AppearanceCard() {
   const [active, setActive] = useState(themes[0])
-  const { hue } = active
-  const accent = `oklch(0.86 0.08 ${hue})`
 
   return (
     <GlassCard className="flex h-full flex-col p-6">
@@ -29,47 +27,32 @@ export function AppearanceCard() {
         </div>
       </div>
 
-      <div
-        className="mt-6 rounded-2xl border border-white/10 p-4 transition-[background] duration-500"
-        style={{
-          background: `radial-gradient(120% 140% at 15% 0%, oklch(0.34 0.08 ${hue}), oklch(0.14 0.025 ${hue}))`,
-        }}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <div
-              className="size-11 shrink-0 rounded-xl border border-white/15 shadow-inner"
-              style={{
-                background: `linear-gradient(135deg, oklch(0.78 0.11 ${hue}), oklch(0.38 0.09 ${hue + 35}))`,
-              }}
-            />
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="truncate text-sm font-semibold text-white">права</p>
-                <Heart className="size-3.5 shrink-0 fill-current" style={{ color: accent }} />
-              </div>
-              <SoundCloudBadge className="mt-0.5 text-[11px]" />
-            </div>
-          </div>
+      <div className="relative mt-6 flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#110d0b] p-3 shadow-[inset_0_1px_0_0_oklch(1_0_0/8%)]">
+        {/* Ambient glow reacting to the selected theme */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-4 rounded-full blur-2xl transition-all duration-500"
+          style={{
+            background: `radial-gradient(65% 80% at 50% 50%, oklch(0.55 0.12 ${active.hue} / 38%), transparent 75%)`,
+          }}
+        />
 
-          <div className="flex items-center gap-3 text-white/75">
-            <Shuffle className="hidden size-3.5 text-white/45 sm:block" aria-hidden="true" />
-            <SkipBack className="size-4" aria-hidden="true" />
-            <span
-              className="grid size-9 place-items-center rounded-full text-black transition-[background] duration-500"
-              style={{ background: accent }}
-            >
-              <Pause className="size-4 fill-current" aria-hidden="true" />
-            </span>
-            <SkipForward className="size-4" aria-hidden="true" />
-            <Repeat className="hidden size-3.5 text-white/45 sm:block" aria-hidden="true" />
-          </div>
-        </div>
-
-        <div className="mt-3.5 flex items-center gap-2.5 font-mono text-[10px] text-white/60">
-          <span>1:16</span>
-          <WavySeekbar progress={52} accentColor={accent} />
-          <span>2:26</span>
+        <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.65)]">
+          <Image
+            src="/images/player-bar.png"
+            alt="Resonance player bar showing album cover for 'права' by ooes, playback controls, and wavy progress bar"
+            width={1229}
+            height={114}
+            className="h-auto w-full object-cover transition-[filter] duration-500"
+            style={{
+              filter: `hue-rotate(${active.rotate}deg) brightness(0.96) contrast(1.03)`,
+            }}
+          />
+          {/* Subtle dark vignette around edges to blend into the card */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 [background:radial-gradient(85%_95%_at_50%_50%,transparent_60%,rgba(17,13,11,0.55)_100%)]"
+          />
         </div>
       </div>
 

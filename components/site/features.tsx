@@ -47,12 +47,12 @@ export function Features() {
               <Cpu className="size-4" aria-hidden="true" />
             </span>
             <div>
-              <div className="flex items-baseline gap-2">
+              <div className="flex flex-wrap items-baseline gap-2">
                 <h3 className="text-base font-semibold tracking-tight">Tauri + Rust core</h3>
-                <span className="font-mono text-xs text-primary">~45 MB RAM</span>
+                <span className="font-mono text-xs text-primary">&lt; 15 MB RAM on Win · &lt; 300 MB on macOS</span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                No bundled Chromium bloat. Starts in under a second and stays invisible to your CPU while you game or work.
+                No bundled Chromium bloat. Uses up to 15 MB of RAM on Windows and under 300 MB on macOS, staying invisible to your CPU while you game or work.
               </p>
             </div>
           </div>
@@ -79,10 +79,10 @@ export function Features() {
             <div>
               <div className="flex items-baseline gap-2">
                 <h3 className="text-base font-semibold tracking-tight">Tiny native installers</h3>
-                <span className="font-mono text-xs text-primary">&lt; 15 MB</span>
+                <span className="font-mono text-xs text-primary">&lt; 20 MB</span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Signed builds for Windows (.exe, .msi), macOS (Apple Silicon &amp; Intel), and Linux (.AppImage, .deb, .rpm).
+                Signed builds under 20 MB for Windows (.exe, .msi), macOS (Apple Silicon &amp; Intel), and Linux (.AppImage, .deb, .rpm).
               </p>
             </div>
           </div>
