@@ -250,11 +250,11 @@ export const translations = {
         title: 'Подключи аккаунты',
         description:
           'Авторизуйся в SoundCloud и YouTube Music прямо внутри окна Resonance.',
-        linked: 'Подключено',
+        linked: 'Связан',
         Paused: 'Войти',
         scStats: '840 треков · 11 плейлистов',
         ytStats: '142 трека · 4 микса',
-        synced: 'Синхронизировано с Resonance',
+        synced: 'Синхронизация Resonance',
         mergeSub: 'Слияние медиатеки в реальном времени',
         syncedPct: '100% синхр.',
         oauthNote: 'Прямая OAuth2-сессия · Без ключей',
