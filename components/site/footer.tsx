@@ -1,6 +1,11 @@
+'use client'
+
+import { useI18n } from './i18n'
 import { LogoMark, RELEASES_URL, REPO_URL } from './primitives'
 
 export function Footer() {
+  const { t } = useI18n()
+
   return (
     <footer className="border-t border-white/10">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12 md:flex-row md:items-start md:justify-between">
@@ -12,7 +17,7 @@ export function Footer() {
             Resonance
           </a>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Native desktop player for SoundCloud and YouTube Music built with Tauri &amp; Rust. Independent open-source project, not affiliated with SoundCloud or Google.
+            {t.footer.description}
           </p>
         </div>
 
@@ -20,29 +25,39 @@ export function Footer() {
           <ul className="space-y-3">
             <li>
               <a href="#features" className="text-muted-foreground hover:text-foreground">
-                Audio &amp; UI
+                {t.nav.audioUi}
               </a>
             </li>
             <li>
               <a href="#how-it-works" className="text-muted-foreground hover:text-foreground">
-                How it works
+                {t.nav.howItWorks}
               </a>
             </li>
             <li>
               <a href="#download" className="text-muted-foreground hover:text-foreground">
-                Download
+                {t.nav.download}
               </a>
             </li>
           </ul>
           <ul className="space-y-3">
             <li>
-              <a href={REPO_URL} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-                GitHub
+              <a
+                href={REPO_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {t.nav.github}
               </a>
             </li>
             <li>
-              <a href={RELEASES_URL} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-                Releases
+              <a
+                href={RELEASES_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {t.footer.releases}
               </a>
             </li>
           </ul>

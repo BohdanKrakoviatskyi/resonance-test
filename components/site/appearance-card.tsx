@@ -14,6 +14,7 @@ import {
   SkipForward,
   Volume2,
 } from 'lucide-react'
+import { useI18n } from './i18n'
 import { GlassCard } from './primitives'
 import { cn } from '@/lib/utils'
 
@@ -25,7 +26,7 @@ const themes = [
   { name: 'Moss', hue: 145 },
   { name: 'Ocean', hue: 235 },
   { name: 'Violet', hue: 300 },
-]
+] as const
 
 function formatTime(sec: number) {
   const s = Math.max(0, Math.min(TOTAL_SECONDS, Math.floor(sec)))
@@ -35,9 +36,10 @@ function formatTime(sec: number) {
 }
 
 export function AppearanceCard() {
-  const [active, setActive] = useState(themes[0])
+  const { t } = useI18n()
+  const [active, setActive] = useState<(typeof themes)[number]>(themes[0])
   const [playing, setPlaying] = useState(true)
-  const [elapsed, setElapsed] = useState(23) // starts at 0:23 like on screenshot
+  const [elapsed, setElapsed] = useState(23)
   const [liked, setLiked] = useState(true)
 
   useEffect(() => {
@@ -57,15 +59,15 @@ export function AppearanceCard() {
     <GlassCard className="flex h-full flex-col p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight">Adaptive player bar &amp; themes</h3>
+          <h3 className="text-xl font-semibold tracking-tight">{t.features.appearance.title}</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-            The interface pulls ambient colors directly from album artwork, or locks to your custom palette. Click play/pause or scrub the bar below.
+            {t.features.appearance.description}
           </p>
         </div>
       </div>
 
       {/* Stage container with ambient glow */}
-      <div className="relative mt-6 flex flex-1 flex-col justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#110d0b] px-3 py-6 sm:px-5 shadow-[inset_0_1px_0_0_oklch(1_0_0/8%)]">
+      <div className="relative mt-6 flex flex-1 flex-col justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#110d0b] px-3 py-6 shadow-[inset_0_1px_0_0_oklch(1_0_0/8%)] sm:px-5">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-4 rounded-full blur-2xl transition-all duration-500"
@@ -116,13 +118,13 @@ export function AppearanceCard() {
                 className="ml-1 shrink-0 transition-transform active:scale-90"
               >
                 <Heart
-                  className={cn('size-4 transition-colors', liked ? 'fill-current' : ' opacity-50')}
+                  className={cn('size-4 transition-colors', liked ? 'fill-current' : 'opacity-50')}
                   style={{ color: accent }}
                 />
               </button>
             </div>
 
-            {/* Center: Shuffle, Prev, Play/Pause (squircle when playing, circle when paused), Next, Repeat-1 */}
+            {/* Center: Shuffle, Prev, Play/Pause, Next, Repeat-1 */}
             <div className="flex items-center justify-center gap-2.5 sm:gap-3.5">
               <Shuffle className="hidden size-3.5 text-white/60 sm:block" aria-hidden="true" />
               <button
@@ -150,7 +152,10 @@ export function AppearanceCard() {
                 {playing ? (
                   <Pause className="size-4 fill-current stroke-[2.5]" aria-hidden="true" />
                 ) : (
-                  <Play className="size-4 translate-x-[1px] fill-current stroke-[2.5]" aria-hidden="true" />
+                  <Play
+                    className="size-4 translate-x-[1px] fill-current stroke-[2.5]"
+                    aria-hidden="true"
+                  />
                 )}
               </button>
 
@@ -193,7 +198,7 @@ export function AppearanceCard() {
             </div>
           </div>
 
-          {/* Bottom row: Interactive Seekbar — Wavy when playing, Straight line when paused (like Image 3) */}
+          {/* Bottom row: Interactive Seekbar — Wavy when playing, Straight line when paused */}
           <div className="mt-2 flex items-center justify-center gap-2.5 sm:px-10">
             <span className="w-8 text-right font-mono text-[11px] font-semibold text-white/70 tabular-nums">
               {formatTime(elapsed)}
@@ -217,7 +222,6 @@ export function AppearanceCard() {
               }}
               className="group relative flex h-5 flex-1 cursor-pointer items-center"
             >
-              {/* Unplayed track line with end dot */}
               <div className="relative h-[3px] w-full rounded-full bg-white/15">
                 <span
                   className="absolute top-1/2 right-0 size-1 -translate-y-1/2 rounded-full"
@@ -225,7 +229,6 @@ export function AppearanceCard() {
                 />
               </div>
 
-              {/* Active progress: Wavy animated SVG when playing, straight solid bar when paused */}
               <div
                 className="pointer-events-none absolute inset-y-0 left-0 flex items-center overflow-hidden transition-[width] duration-300"
                 style={{ width: `calc(${progress}% - 4px)` }}
@@ -254,7 +257,6 @@ export function AppearanceCard() {
                 )}
               </div>
 
-              {/* Vertical pill thumb with subtle gap */}
               <span
                 className="pointer-events-none absolute top-1/2 h-4 w-[3.5px] -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_10px_rgba(255,210,190,0.8)] transition-[left] duration-300 group-hover:scale-y-110"
                 style={{
@@ -276,17 +278,21 @@ export function AppearanceCard() {
           <button
             key={theme.name}
             type="button"
-            aria-label={theme.name}
+            aria-label={t.features.appearance.themes[theme.name]}
             aria-pressed={active.name === theme.name}
             onClick={() => setActive(theme)}
             className={cn(
               'size-7 rounded-full ring-offset-2 ring-offset-background transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-              active.name === theme.name ? 'scale-110 ring-2 ring-white/80' : 'opacity-75 hover:opacity-100',
+              active.name === theme.name
+                ? 'scale-110 ring-2 ring-white/80'
+                : 'opacity-75 hover:opacity-100',
             )}
             style={{ background: `oklch(0.72 0.12 ${theme.hue})` }}
           />
         ))}
-        <span className="ml-auto font-mono text-xs text-muted-foreground">{active.name}</span>
+        <span className="ml-auto font-mono text-xs text-muted-foreground">
+          {t.features.appearance.themes[active.name]}
+        </span>
       </div>
     </GlassCard>
   )

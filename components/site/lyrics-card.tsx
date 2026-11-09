@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Heart, ListMusic, ListPlus, MicVocal, Search, ThumbsDown } from 'lucide-react'
+import { useI18n } from './i18n'
 import { GlassCard, SoundCloudBadge } from './primitives'
 import { cn } from '@/lib/utils'
 
@@ -23,6 +24,7 @@ const lines = [
 const LINE_HEIGHT = 34
 
 export function LyricsCard() {
+  const { t } = useI18n()
   const [active, setActive] = useState(3)
 
   useEffect(() => {
@@ -36,13 +38,13 @@ export function LyricsCard() {
     <GlassCard className="flex h-full flex-col p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight">Live synced lyrics</h3>
+          <h3 className="text-xl font-semibold tracking-tight">{t.features.lyrics.title}</h3>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-            Time-synced lines scroll with the track. Wrong match? Swap the lyrics source in one click.
+            {t.features.lyrics.description}
           </p>
         </div>
         <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-[10px] text-muted-foreground">
-          Change lyrics
+          {t.features.lyrics.changeBtn}
         </span>
       </div>
 
@@ -88,11 +90,11 @@ export function LyricsCard() {
           <div className="mt-3 grid grid-cols-2 gap-1.5">
             <div className="flex items-center justify-center gap-1.5 rounded-full bg-[#ffd2be] px-3 py-1.5 text-xs font-semibold text-[#23140d] shadow-sm">
               <MicVocal className="size-3.5" aria-hidden="true" />
-              <span>Lyrics</span>
+              <span>{t.features.lyrics.tabLyrics}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5 rounded-full bg-[#2a1d17] px-3 py-1.5 text-xs font-medium text-[#b7a399]">
               <ListMusic className="size-3.5" aria-hidden="true" />
-              <span>Up next</span>
+              <span>{t.features.lyrics.tabUpNext}</span>
             </div>
           </div>
         </div>
@@ -126,7 +128,7 @@ export function LyricsCard() {
                     className={cn(
                       'flex cursor-pointer items-center px-4 text-left text-[15px] font-bold tracking-tight transition-all duration-500 select-none',
                       isActive
-                        ? 'scale-[1.02] origin-left text-white [text-shadow:0_0_18px_rgba(255,210,190,0.65)]'
+                        ? 'origin-left scale-[1.02] text-white [text-shadow:0_0_18px_rgba(255,210,190,0.65)]'
                         : 'text-[#8c7a70]/60 hover:text-[#b7a399]',
                     )}
                     style={{ height: LINE_HEIGHT }}

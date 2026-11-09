@@ -1,11 +1,13 @@
 'use client'
 
 import { useId, useState } from 'react'
+import { useI18n } from './i18n'
 import { GlassCard } from './primitives'
 
 const MAX_SECONDS = 12
 
 export function CrossfadeCard() {
+  const { t } = useI18n()
   const [seconds, setSeconds] = useState(6)
   const inputId = useId()
   const overlap = (seconds / MAX_SECONDS) * 56
@@ -14,9 +16,9 @@ export function CrossfadeCard() {
 
   return (
     <GlassCard className="flex h-full flex-col p-6">
-      <h3 className="text-xl font-semibold tracking-tight">Crossfade</h3>
+      <h3 className="text-xl font-semibold tracking-tight">{t.features.crossfade.title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        Blend one track into the next so the music never stops.
+        {t.features.crossfade.description}
       </p>
 
       <div className="mt-6 space-y-2 rounded-2xl bg-black/30 p-4" aria-hidden="true">
@@ -41,10 +43,10 @@ export function CrossfadeCard() {
       <div className="mt-auto pt-6">
         <div className="mb-3 flex items-center justify-between text-xs">
           <label htmlFor={inputId} className="text-muted-foreground">
-            Fade length
+            {t.features.crossfade.fadeLength}
           </label>
           <output htmlFor={inputId} className="font-mono text-primary">
-            {seconds === 0 ? 'Off' : `${seconds}s`}
+            {seconds === 0 ? t.features.crossfade.off : `${seconds}${t.features.crossfade.unit}`}
           </output>
         </div>
         <input

@@ -3,6 +3,7 @@
 import { useState, type PointerEvent } from 'react'
 import Image from 'next/image'
 import { Heart, ListMusic, ListPlus, MicVocal, ThumbsDown } from 'lucide-react'
+import { useI18n } from './i18n'
 import { cn } from '@/lib/utils'
 
 // ============================================================================
@@ -112,6 +113,7 @@ export const UP_NEXT_TRACKS: QueueTrack[] = [
 ]
 
 export function HitPlaySidebarWidget() {
+  const { t } = useI18n()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [activeTab, setActiveTab] = useState<'up-next' | 'lyrics'>('up-next')
   const [likedIds, setLikedIds] = useState<Record<string, boolean>>({
@@ -143,7 +145,7 @@ export function HitPlaySidebarWidget() {
   }
 
   return (
-    <div className="flex flex-col rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
+    <div className="flex h-full flex-col rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-b from-[#251813] via-[#1c130f] to-[#140e0b] p-3 shadow-[inset_0_1px_0_0_rgba(255,215,195,0.1)] select-none">
       {/* Верхняя часть правой панели: квадратная обложка, название, SoundCloud + автор и кнопки ❤️ 👎 ➕ */}
       <div className="flex items-center gap-3">
         <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-[0_10px_25px_rgba(0,0,0,0.55)]">
@@ -176,7 +178,6 @@ export function HitPlaySidebarWidget() {
             <span className="truncate font-medium">{currentTrack.artist}</span>
           </div>
 
-          {/* Круглые кнопки действий: ❤️ 👎 ➕ */}
           <div className="mt-2 flex items-center gap-1.5">
             <button
               type="button"
@@ -220,7 +221,7 @@ export function HitPlaySidebarWidget() {
           )}
         >
           <MicVocal className="size-3" aria-hidden="true" />
-          <span>Lyrics</span>
+          <span>{t.howItWorks.step4.tabLyrics}</span>
         </button>
 
         <button
@@ -234,16 +235,16 @@ export function HitPlaySidebarWidget() {
           )}
         >
           <ListMusic className="size-3" aria-hidden="true" />
-          <span>Up next</span>
+          <span>{t.howItWorks.step4.tabUpNext}</span>
         </button>
       </div>
 
-      {/* Контентная панель: список очереди Up next ИЛИ живая лирика с интерактивным waveform scrubbing */}
-      <div className="mt-2.5 h-[196px] overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
+      {/* Контентная панель с кастомным тонким скроллбаром без стрелок */}
+      <div className="mt-2.5 h-[196px] flex-1 overflow-hidden rounded-2xl border border-white/[0.06] bg-[#1e1410]/95 p-1.5">
         {activeTab === 'up-next' ? (
           <ul
             aria-label="Up next queue"
-            className="h-full space-y-1 overflow-y-auto pr-1 [scrollbar-color:rgba(255,210,190,0.22)_transparent] [scrollbar-width:thin]"
+            className="custom-queue-scroll h-full space-y-1 overflow-y-auto pr-1"
           >
             {UP_NEXT_TRACKS.map((track, idx) => {
               const isPlaying = idx === selectedIndex
@@ -286,7 +287,6 @@ export function HitPlaySidebarWidget() {
                       </p>
                     </div>
 
-                    {/* Индикатор эквалайзера (три прыгающие вертикальные полоски lll) у играющего трека */}
                     {isPlaying && (
                       <span
                         aria-label="Now playing"
@@ -338,7 +338,6 @@ export function HitPlaySidebarWidget() {
               })}
             </ul>
 
-            {/* Интерактивный волновой прогресс-бар (waveform scrubbing) */}
             <div className="mt-auto border-t border-white/[0.06] pt-2">
               <div className="flex items-center gap-2 font-mono text-[10px] text-[#b8a49a]">
                 <span>0:48</span>

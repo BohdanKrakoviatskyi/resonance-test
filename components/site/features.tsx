@@ -1,11 +1,16 @@
+'use client'
+
 import { Cpu, HardDriveDownload, RefreshCw } from 'lucide-react'
 import { AppearanceCard } from './appearance-card'
 import { CrossfadeCard } from './crossfade-card'
 import { EqualizerCard } from './equalizer-card'
+import { useI18n } from './i18n'
 import { LyricsCard } from './lyrics-card'
 import { GlassCard, Reveal, SectionHeading } from './primitives'
 
 export function Features() {
+  const { t } = useI18n()
+
   return (
     <section id="features" className="relative mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
       <div
@@ -17,9 +22,9 @@ export function Features() {
         className="pointer-events-none absolute right-10 bottom-10 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,oklch(0.45_0.08_30/20%),transparent_70%)] blur-3xl"
       />
       <SectionHeading
-        eyebrow="Audio Engine & Interface"
-        title="Built for people who actually care how their player feels."
-        description="Web players eat hundreds of megabytes of RAM and give you zero control over sound. Resonance runs natively with real audio shaping and interactive controls."
+        eyebrow={t.features.eyebrow}
+        title={t.features.title}
+        description={t.features.description}
       />
 
       <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-12">
@@ -48,11 +53,15 @@ export function Features() {
             </span>
             <div>
               <div className="flex flex-wrap items-baseline gap-2">
-                <h3 className="text-base font-semibold tracking-tight">Tauri + Rust core</h3>
-                <span className="font-mono text-xs text-primary">&lt; 15 MB RAM on Win · &lt; 300 MB on macOS</span>
+                <h3 className="text-base font-semibold tracking-tight">
+                  {t.features.specs.tauriTitle}
+                </h3>
+                <span className="font-mono text-xs text-primary">
+                  {t.features.specs.tauriBadge}
+                </span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                No bundled Chromium bloat. Uses up to 15 MB of RAM on Windows and under 300 MB on macOS, staying invisible to your CPU while you game or work.
+                {t.features.specs.tauriDesc}
               </p>
             </div>
           </div>
@@ -63,11 +72,15 @@ export function Features() {
             </span>
             <div>
               <div className="flex items-baseline gap-2">
-                <h3 className="text-base font-semibold tracking-tight">One-click auto-updater</h3>
-                <span className="font-mono text-xs text-primary">GitHub Releases</span>
+                <h3 className="text-base font-semibold tracking-tight">
+                  {t.features.specs.updaterTitle}
+                </h3>
+                <span className="font-mono text-xs text-primary">
+                  {t.features.specs.updaterBadge}
+                </span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Checks for signed releases in the background, downloads the delta, and restarts into the new build right from the sidebar.
+                {t.features.specs.updaterDesc}
               </p>
             </div>
           </div>
@@ -78,11 +91,15 @@ export function Features() {
             </span>
             <div>
               <div className="flex items-baseline gap-2">
-                <h3 className="text-base font-semibold tracking-tight">Tiny native installers</h3>
-                <span className="font-mono text-xs text-primary">&lt; 20 MB</span>
+                <h3 className="text-base font-semibold tracking-tight">
+                  {t.features.specs.installerTitle}
+                </h3>
+                <span className="font-mono text-xs text-primary">
+                  {t.features.specs.installerBadge}
+                </span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Signed builds under 20 MB for Windows (.exe, .msi), macOS (Apple Silicon &amp; Intel), and Linux (.AppImage, .deb, .rpm).
+                {t.features.specs.installerDesc}
               </p>
             </div>
           </div>

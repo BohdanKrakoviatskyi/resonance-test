@@ -1,6 +1,9 @@
+'use client'
+
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { AnimatedHeroBackground } from './animated-hero-background'
 import { HeroShowcaseCarousel } from './hero-showcase-carousel'
+import { useI18n } from './i18n'
 import {
   AnimatedText,
   LogoMark,
@@ -11,6 +14,8 @@ import {
 } from './primitives'
 
 export function Hero() {
+  const { locale, t } = useI18n()
+
   return (
     <section id="top" className="relative overflow-x-clip pt-32 pb-20 md:pt-40 md:pb-28">
       {/* Ambient top glow */}
@@ -24,7 +29,7 @@ export function Hero() {
           className="animate-rise-in inline-flex flex-wrap items-center justify-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-md"
           style={{ animationDelay: '40ms' }}
         >
-          <span>One desktop library for</span>
+          <span>{t.hero.pillPrefix}</span>
           <SoundCloudBadge />
           <span className="text-white/30">+</span>
           <YouTubeMusicBadge />
@@ -32,10 +37,11 @@ export function Hero() {
 
         <h1 className="mt-6 text-balance text-4xl leading-[1.06] font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl">
           <AnimatedText
-            text="Your underground tracks and main library in one window."
+            key={locale}
+            text={t.hero.title}
             wordClassName="bg-gradient-to-b from-white to-white/75 bg-clip-text text-transparent"
-            baseDelay={100}
-            stagger={50}
+            baseDelay={80}
+            stagger={45}
           />
         </h1>
 
@@ -43,7 +49,7 @@ export function Hero() {
           className="animate-rise-in mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
           style={{ animationDelay: '420ms' }}
         >
-          Stop juggling browser tabs. Resonance merges your SoundCloud likes and YouTube Music playlists into a fast, native desktop player with synced lyrics, a 10-band equalizer, and seamless crossfade.
+          {t.hero.subtitle}
         </p>
 
         <div
@@ -55,7 +61,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_40px_oklch(0.88_0.07_55/30%)] transition-transform hover:scale-[1.02]"
           >
             <ArrowDown className="size-4" aria-hidden="true" />
-            Download for Desktop
+            {t.hero.downloadCta}
           </a>
           <a
             href={REPO_URL}
@@ -63,7 +69,7 @@ export function Hero() {
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-white/10"
           >
-            Source on GitHub
+            {t.hero.githubCta}
             <ArrowUpRight className="size-4 text-muted-foreground" aria-hidden="true" />
           </a>
         </div>
@@ -72,7 +78,7 @@ export function Hero() {
           className="animate-rise-in mt-4 font-mono text-xs text-muted-foreground/80"
           style={{ animationDelay: '640ms' }}
         >
-          Windows 10/11 (.exe, .msi) · macOS (.dmg) · Linux (.AppImage, .deb, .rpm) · Built with Tauri &amp; Rust
+          {t.hero.techMeta}
         </p>
       </div>
 

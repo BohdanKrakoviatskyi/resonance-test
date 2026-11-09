@@ -1,50 +1,61 @@
+'use client'
+
 import { Download as DownloadIcon, Laptop, Monitor, Terminal } from 'lucide-react'
+import { useI18n } from './i18n'
 import { GlassCard, REPO_URL, Reveal, SectionHeading } from './primitives'
 
-const platforms = [
-  {
-    icon: Monitor,
-    name: 'Windows',
-    detail: 'Windows 10 / 11 (64-bit)',
-    primary: {
-      label: 'Download Installer',
-      format: '.exe',
-      href: '/api/download?platform=windows-exe',
-    },
-    secondary: [
-      { label: '.msi package', href: '/api/download?platform=windows-msi' },
-    ],
-  },
-  {
-    icon: Laptop,
-    name: 'macOS',
-    detail: 'macOS 13+ (Apple Silicon & Intel)',
-    primary: {
-      label: 'Apple Silicon',
-      format: '.dmg',
-      href: '/api/download?platform=macos-arm64',
-    },
-    secondary: [
-      { label: 'Intel (.dmg)', href: '/api/download?platform=macos-x64' },
-    ],
-  },
-  {
-    icon: Terminal,
-    name: 'Linux',
-    detail: 'Wayland / X11, PipeWire / PulseAudio',
-    primary: {
-      label: 'Download',
-      format: '.AppImage',
-      href: '/api/download?platform=linux-appimage',
-    },
-    secondary: [
-      { label: '.deb', href: '/api/download?platform=linux-deb' },
-      { label: '.rpm', href: '/api/download?platform=linux-rpm' },
-    ],
-  },
-]
-
 export function Download() {
+  const { t } = useI18n()
+
+  const platforms = [
+    {
+      icon: Monitor,
+      name: 'Windows',
+      detail: t.download.platforms.windowsDetail,
+      primary: {
+        label: t.download.platforms.windowsPrimary,
+        format: '.exe',
+        href: '/api/download?platform=windows-exe',
+      },
+      secondary: [
+        {
+          label: t.download.platforms.windowsSecondary,
+          href: '/api/download?platform=windows-msi',
+        },
+      ],
+    },
+    {
+      icon: Laptop,
+      name: 'macOS',
+      detail: t.download.platforms.macosDetail,
+      primary: {
+        label: t.download.platforms.macosPrimary,
+        format: '.dmg',
+        href: '/api/download?platform=macos-arm64',
+      },
+      secondary: [
+        {
+          label: t.download.platforms.macosSecondary,
+          href: '/api/download?platform=macos-x64',
+        },
+      ],
+    },
+    {
+      icon: Terminal,
+      name: 'Linux',
+      detail: t.download.platforms.linuxDetail,
+      primary: {
+        label: t.download.platforms.linuxPrimary,
+        format: '.AppImage',
+        href: '/api/download?platform=linux-appimage',
+      },
+      secondary: [
+        { label: '.deb', href: '/api/download?platform=linux-deb' },
+        { label: '.rpm', href: '/api/download?platform=linux-rpm' },
+      ],
+    },
+  ]
+
   return (
     <section id="download" className="relative mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
       <div
@@ -52,9 +63,9 @@ export function Download() {
         className="absolute inset-x-0 top-1/2 -z-10 h-80 -translate-y-1/2 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.5_0.08_45/28%),transparent_70%)] blur-2xl"
       />
       <SectionHeading
-        eyebrow="Latest Release"
-        title="Get Resonance for your desktop"
-        description="Free and open source. Direct installers fetched straight from the latest signed GitHub release."
+        eyebrow={t.download.eyebrow}
+        title={t.download.title}
+        description={t.download.description}
         align="center"
       />
 
@@ -83,7 +94,7 @@ export function Download() {
                 </a>
                 {secondary.length > 0 && (
                   <div className="mt-3.5 flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
-                    <span>Also:</span>
+                    <span>{t.download.also}</span>
                     {secondary.map((alt) => (
                       <a
                         key={alt.href}
@@ -104,14 +115,14 @@ export function Download() {
 
       <Reveal delay={350}>
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          Prefer to build from source?{' '}
+          {t.download.sourcePrefix}{' '}
           <a
             href={REPO_URL}
             target="_blank"
             rel="noreferrer"
             className="text-foreground underline underline-offset-4 hover:text-primary"
           >
-            Clone the repository on GitHub
+            {t.download.sourceLink}
           </a>
           .
         </p>
