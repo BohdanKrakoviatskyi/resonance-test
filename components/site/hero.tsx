@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { AnimatedHeroBackground } from './animated-hero-background'
+import { HeroShowcaseCarousel } from './hero-showcase-carousel'
 import {
   AnimatedText,
   LogoMark,
@@ -12,7 +12,7 @@ import {
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+    <section id="top" className="relative overflow-x-clip pt-32 pb-20 md:pt-40 md:pb-28">
       {/* Ambient top glow */}
       <div
         aria-hidden="true"
@@ -97,23 +97,9 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Real desktop app showcase emerging from the horizon glow */}
-      <Reveal delay={180} className="relative z-10 mx-auto -mt-12 max-w-6xl px-4 sm:px-6 md:-mt-24">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -inset-x-8 -top-10 -bottom-10 -z-10 rounded-[3rem] bg-[radial-gradient(60%_55%_at_50%_35%,oklch(0.5_0.09_45/42%),transparent_70%)] blur-2xl"
-        />
-        <div className="relative rounded-[1.6rem] border border-white/12 bg-gradient-to-b from-white/12 to-white/[0.02] p-2 shadow-[0_40px_120px_-25px_oklch(0.45_0.09_45/55%)] backdrop-blur-sm">
-          <Image
-            src="/images/resonance-app.jpg"
-            alt="Resonance desktop interface playing 'права' by ooes from SoundCloud, showing YouTube Music and SoundCloud playlists on the left and live synced Russian lyrics on the right"
-            width={1280}
-            height={673}
-            priority
-            sizes="(min-width: 1152px) 1120px, 100vw"
-            className="h-auto w-full rounded-[1.15rem]"
-          />
-        </div>
+      {/* Fan carousel of 3 real Resonance desktop screenshots */}
+      <Reveal delay={180} className="overflow-visible">
+        <HeroShowcaseCarousel />
       </Reveal>
     </section>
   )

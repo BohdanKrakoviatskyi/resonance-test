@@ -5,44 +5,44 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 // ============================================================================
-// НАСТРОЙКИ РАДИАЛЬНОЙ ВОЛНОВОЙ АНИМАЦИИ БАРХАНОВ (легко подкрутить под себя)
+// НАСТРОЙКИ ВОЛНОВОЙ АНИМАЦИИ БАРХАНОВ (точка старта глубоко ВНИЗУ ЗА КАДРОМ)
 // ============================================================================
-/** Скорость расхождения волн от центра (выше = быстрее) */
-export const WAVE_SPEED = 1.65
+/** Скорость движения широких дуг снизу вверх к горизонту */
+export const WAVE_SPEED = 0.85
 
-/** Сила физического смещения текстуры песка (0.015–0.025 — хорошо видно глазом, без "желе") */
-export const WAVE_AMPLITUDE = 0.021
+/** Деликатная амплитуда смещения по вертикали (сохраняет четкость полосок песка без мыла) */
+export const WAVE_AMPLITUDE = 0.011
 
-/** Частота колец (количество гребней волн от горизонта до переднего плана) */
-export const WAVE_FREQUENCY = 24.0
+/** Низкая частота (длинные широкие дуги вместо мелких концентрических колец) */
+export const WAVE_FREQUENCY = 6.5
 
-/** Точка рождения волн по горизонтали (0.5 = ровно центр луча и логотипа RS) */
+/** Центр по горизонтали (0.5 = строго посередине экрана) */
 export const ORIGIN_X = 0.5
 
-/** Точка рождения волн по вертикали в UV текстуры (0.0 = верх, ~0.48 = основание луча у горизонта) */
-export const ORIGIN_Y = 0.48
+/**
+ * Точка старта волн ГЛУБОКО ВНИЗУ ЗА ПРЕДЕЛАМИ ЭКРАНА (1.0 = нижний край блока, 1.42 = далеко под скриншотами).
+ * Благодаря этому точка рождения волн никогда не видна в кадре, а снизу входят широкие плавные дуги.
+ */
+export const ORIGIN_Y = 1.42
 
-/** Радиус плавного затухания волн к краям экрана */
-export const FALLOFF_RADIUS = 0.96
+/** Верхняя граница затухания (к логотипу RS, лучу света и небу амплитуда падает строго в 0.0) */
+export const UPPER_STOP_Y = 0.54
 
-/** Сила теплого светового импульса на гребнях волн (подсветка ребер барханов) */
-export const LUMINANCE_PULSE = 0.34
+/** Нижняя точка полного раскрытия волны (у основания барханов внизу кадра) */
+export const LOWER_FULL_Y = 0.84
 
-/** Верхняя граница маски барханов (выше этой линии небо и звезды остаются неподвижными) */
-export const HORIZON_MASK_TOP = 0.35
-
-/** Мягкость перехода маски на линии горизонта */
-export const HORIZON_MASK_FEATHER = 0.14
+/** Мягкий теплый блик света, скользящий по ребрам дюн вместе с широкой волной */
+export const LUMINANCE_PULSE = 0.22
 
 // ============================================================================
-// GLSL SHADERS (Чистый WebGL 1.0 — 60 FPS, 0 зависимостей, 0 нагрузки на CPU)
+// GLSL SHADERS (Чистый WebGL 1.0 — 60 FPS, 0 нагрузки на CPU)
 // ============================================================================
 const VERTEX_SHADER = `
   attribute vec2 a_position;
   varying vec2 v_uv;
 
   void main() {
-    // Переводим clip-space (-1..1) в экранные UV (0..1, где Y=0 сверху, Y=1 снизу)
+    // v_uv.y = 0.0 вверху (небо), v_uv.y = 1.0 внизу (основание барханов)
     v_uv = vec2(a_position.x * 0.5 + 0.5, 0.5 - a_position.y * 0.5);
     gl_Position = vec4(a_position, 0.0, 1.0);
   }
@@ -62,10 +62,9 @@ const FRAGMENT_SHADER = `
   uniform float u_amplitude;
   uniform float u_frequency;
   uniform vec2 u_origin;
-  uniform float u_falloff;
+  uniform float u_upperStopY;
+  uniform float u_lowerFullY;
   uniform float u_lumPulse;
-  uniform float u_horizonTop;
-  uniform float u_horizonFeather;
 
   // Пересчет экранных UV в текстурные UV по правилу CSS object-fit: cover
   vec2 getCoverUV(vec2 uv, vec2 canvasRes, vec2 imageRes) {
@@ -85,66 +84,54 @@ const FRAGMENT_SHADER = `
   void main() {
     vec2 coverUV = getCoverUV(v_uv, u_resolution, u_imageResolution);
 
-    // Вектор от точки схождения барханов (основания луча) к текущему пикселю
+    // Вектор от невидимого центра далеко ВНИЗУ за кадром (u_origin = 0.5, 1.42) к текущему пикселю
     vec2 delta = coverUV - u_origin;
 
-    // Перспективное сжатие по Y: круги ложатся в плоскость барханов эллиптическими дугами
-    vec2 perspectiveDelta = vec2(delta.x * 1.15, delta.y * 2.0);
-    float dist = length(perspectiveDelta);
+    // Широкий радиус дуги: сжимаем X, чтобы дуги входили снизу широким спокойным фронтом
+    vec2 arcDelta = vec2(delta.x * 0.72, delta.y);
+    float dist = length(arcDelta);
 
-    // 1. Маска горизонта: небо со звездами и верх луча остаются неподвижными
-    float hillCurve = -abs(coverUV.x - 0.5) * 0.14;
-    float localHorizon = u_horizonTop + hillCurve;
-    float duneMask = smoothstep(localHorizon, localHorizon + u_horizonFeather, coverUV.y);
+    // 1. Вертикальное затухание снизу вверх:
+    // Внизу (coverUV.y ~ 0.85..1.0) сила максимальна, а к логотипу RS (coverUV.y <= 0.54),
+    // лучу света и звездному небу амплитуда плавно падает в полный 0.0.
+    float sideArch = abs(coverUV.x - 0.5) * 0.12;
+    float verticalMask = smoothstep(u_upperStopY - sideArch, u_lowerFullY, coverUV.y);
 
-    // 2. Плавное рождение в центре и мягкое затухание к краям (чтобы края фото не рвались)
-    float innerFade = smoothstep(0.01, 0.10, dist);
-    float outerFade = 1.0 - smoothstep(0.18, u_falloff, dist);
+    // Дополнительная защитная маска вокруг центрального логотипа RS (0.5, 0.52),
+    // чтобы вокруг RS никогда не возникало никаких искажений
+    float distToLogo = length((coverUV - vec2(0.5, 0.52)) * vec2(1.2, 1.8));
+    float logoSafeZone = smoothstep(0.12, 0.28, distToLogo);
 
-    // Защитная виньетка у самых границ текстуры (0..1)
-    float edgeGuardX = smoothstep(0.0, 0.05, coverUV.x) * smoothstep(1.0, 0.95, coverUV.x);
-    float edgeGuardY = smoothstep(0.0, 0.05, coverUV.y) * smoothstep(1.0, 0.93, coverUV.y);
-    float attenuation = duneMask * innerFade * outerFade * edgeGuardX * edgeGuardY;
+    // Мягкое гашение у самых краев текстуры (0..1), чтобы края не рвались
+    float edgeGuardX = smoothstep(0.0, 0.06, coverUV.x) * smoothstep(1.0, 0.94, coverUV.x);
+    float edgeGuardY = smoothstep(0.0, 0.06, coverUV.y) * smoothstep(1.0, 0.96, coverUV.y);
 
-    // 3. Радиальная волна, расходящаяся от центра наружу (-u_time * u_speed)
+    float attenuation = verticalMask * logoSafeZone * edgeGuardX * edgeGuardY;
+
+    // 2. Длинная плавная волна, идущая снизу вверх (от u_origin наружу к горизонту: dist увеличивается снизу вверх, поэтому - u_time * u_speed)
     float phase = dist * u_frequency - u_time * u_speed;
+    float wave = sin(phase);
 
-    // Основная медленная волна + легкая вторая гармоника для органичности звука
-    float primaryWave = sin(phase);
-    float harmonicWave = sin(phase * 2.0 - 0.6) * 0.35;
-    float combinedWave = (primaryWave + harmonicWave) / 1.35;
-
-    // Направление смещения: радиально от центра + поперечное дыхание борозд песка
-    vec2 radialDir = normalize(delta + vec2(0.0001));
-    vec2 dispDir = normalize(mix(radialDir, vec2(radialDir.x * 0.55, 1.0), 0.4));
-
-    // Смещаем UV деликатно, сохраняя жесткую геометрию самих горок
+    // Смещаем текстуру очень деликатно вдоль нормали широкой дуги (преимущественно по вертикали),
+    // чтобы полоски песка на барханах оставались идеально четкими и не мылились
+    vec2 arcNormal = normalize(vec2(delta.x * 0.25, delta.y));
     vec2 displacedUV = clamp(
-      coverUV + dispDir * combinedWave * u_amplitude * attenuation,
+      coverUV + arcNormal * wave * u_amplitude * attenuation,
       vec2(0.001),
       vec2(0.999)
     );
 
     vec4 texColor = texture2D(u_texture, displacedUV);
 
-    // 4. Световой блик (luminance pulse), бегущий по ребрам песчаных бороздок
+    // 3. Мягкий световой перелив на гребнях широких волн, подсвечивающий светлые грани барханов
     float ridgeLuma = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
-    float ridgeMask = smoothstep(0.02, 0.32, ridgeLuma);
+    float ridgeMask = smoothstep(0.02, 0.35, ridgeLuma);
+    float crest = pow(max(0.0, wave * 0.5 + 0.5), 2.0);
 
-    // Гребень световой волны
-    float crest = pow(max(0.0, primaryWave * 0.5 + 0.5), 2.2);
+    vec3 warmGlowColor = vec3(1.0, 0.78, 0.58);
+    vec3 highlight = warmGlowColor * crest * u_lumPulse * attenuation * (0.25 + 0.75 * ridgeMask);
 
-    // Теплый янтарно-золотистый оттенок в тон палитры Resonance
-    vec3 warmGlowColor = vec3(1.0, 0.78, 0.56);
-    vec3 highlight = warmGlowColor * crest * u_lumPulse * attenuation * (0.3 + 0.7 * ridgeMask);
-
-    // Мягкое дыхание самого источника света у основания луча
-    float coreDist = length((coverUV - u_origin) * vec2(1.0, 1.6));
-    float corePulse = (0.5 + 0.5 * sin(u_time * u_speed * 0.9)) * exp(-coreDist * 6.5) * 0.12;
-
-    vec3 finalRGB = texColor.rgb + highlight + warmGlowColor * corePulse;
-
-    gl_FragColor = vec4(finalRGB, texColor.a);
+    gl_FragColor = vec4(texColor.rgb + highlight, texColor.a);
   }
 `
 
@@ -204,7 +191,6 @@ export function AnimatedHeroBackground({
 
     gl.useProgram(program)
 
-    // Полноэкранный квад из 2 треугольников
     const buffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
     gl.bufferData(
@@ -217,7 +203,6 @@ export function AnimatedHeroBackground({
     gl.enableVertexAttribArray(posLoc)
     gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0)
 
-    // Uniform-локации
     const uTime = gl.getUniformLocation(program, 'u_time')
     const uRes = gl.getUniformLocation(program, 'u_resolution')
     const uImgRes = gl.getUniformLocation(program, 'u_imageResolution')
@@ -225,22 +210,18 @@ export function AnimatedHeroBackground({
     const uAmp = gl.getUniformLocation(program, 'u_amplitude')
     const uFreq = gl.getUniformLocation(program, 'u_frequency')
     const uOrigin = gl.getUniformLocation(program, 'u_origin')
-    const uFalloff = gl.getUniformLocation(program, 'u_falloff')
+    const uUpperStopY = gl.getUniformLocation(program, 'u_upperStopY')
+    const uLowerFullY = gl.getUniformLocation(program, 'u_lowerFullY')
     const uLumPulse = gl.getUniformLocation(program, 'u_lumPulse')
-    const uHorizonTop = gl.getUniformLocation(program, 'u_horizonTop')
-    const uHorizonFeather = gl.getUniformLocation(program, 'u_horizonFeather')
 
-    // Передаем константы настройки волн
     gl.uniform1f(uSpeed, WAVE_SPEED)
     gl.uniform1f(uAmp, WAVE_AMPLITUDE)
     gl.uniform1f(uFreq, WAVE_FREQUENCY)
     gl.uniform2f(uOrigin, ORIGIN_X, ORIGIN_Y)
-    gl.uniform1f(uFalloff, FALLOFF_RADIUS)
+    gl.uniform1f(uUpperStopY, UPPER_STOP_Y)
+    gl.uniform1f(uLowerFullY, LOWER_FULL_Y)
     gl.uniform1f(uLumPulse, LUMINANCE_PULSE)
-    gl.uniform1f(uHorizonTop, HORIZON_MASK_TOP)
-    gl.uniform1f(uHorizonFeather, HORIZON_MASK_FEATHER)
 
-    // Создаем текстуру
     const texture = gl.createTexture()
     gl.bindTexture(gl.TEXTURE_2D, texture)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
@@ -251,6 +232,7 @@ export function AnimatedHeroBackground({
     let rafId = 0
     let disposed = false
     let isIntersecting = true
+    let started = false
 
     const updateSize = () => {
       if (!canvas || disposed) return
@@ -282,7 +264,8 @@ export function AnimatedHeroBackground({
     img.decoding = 'async'
 
     const startShaderLoop = () => {
-      if (disposed) return
+      if (disposed || started) return
+      started = true
       gl.bindTexture(gl.TEXTURE_2D, texture)
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
       gl.uniform2f(uImgRes, img.naturalWidth || 1920, img.naturalHeight || 820)
@@ -329,7 +312,6 @@ export function AnimatedHeroBackground({
         className,
       )}
     >
-      {/* Статичный fallback пока грузится текстура */}
       <Image
         src={src}
         alt=""
@@ -342,7 +324,6 @@ export function AnimatedHeroBackground({
         )}
       />
 
-      {/* WebGL 2D Shader Canvas */}
       <canvas
         ref={canvasRef}
         className={cn(
