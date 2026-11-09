@@ -8,13 +8,13 @@ import { cn } from '@/lib/utils'
 // НАСТРОЙКИ РАДИАЛЬНОЙ ВОЛНОВОЙ АНИМАЦИИ БАРХАНОВ (легко подкрутить под себя)
 // ============================================================================
 /** Скорость расхождения волн от центра (выше = быстрее) */
-export const WAVE_SPEED = 1.15
+export const WAVE_SPEED = 1.65
 
-/** Сила физического смещения текстуры песка (0.008–0.018 — заметно, но без "желе") */
-export const WAVE_AMPLITUDE = 0.013
+/** Сила физического смещения текстуры песка (0.015–0.025 — хорошо видно глазом, без "желе") */
+export const WAVE_AMPLITUDE = 0.021
 
 /** Частота колец (количество гребней волн от горизонта до переднего плана) */
-export const WAVE_FREQUENCY = 26.0
+export const WAVE_FREQUENCY = 24.0
 
 /** Точка рождения волн по горизонтали (0.5 = ровно центр луча и логотипа RS) */
 export const ORIGIN_X = 0.5
@@ -23,13 +23,13 @@ export const ORIGIN_X = 0.5
 export const ORIGIN_Y = 0.48
 
 /** Радиус плавного затухания волн к краям экрана */
-export const FALLOFF_RADIUS = 0.92
+export const FALLOFF_RADIUS = 0.96
 
 /** Сила теплого светового импульса на гребнях волн (подсветка ребер барханов) */
-export const LUMINANCE_PULSE = 0.24
+export const LUMINANCE_PULSE = 0.34
 
 /** Верхняя граница маски барханов (выше этой линии небо и звезды остаются неподвижными) */
-export const HORIZON_MASK_TOP = 0.36
+export const HORIZON_MASK_TOP = 0.35
 
 /** Мягкость перехода маски на линии горизонта */
 export const HORIZON_MASK_FEATHER = 0.14
@@ -89,22 +89,21 @@ const FRAGMENT_SHADER = `
     vec2 delta = coverUV - u_origin;
 
     // Перспективное сжатие по Y: круги ложатся в плоскость барханов эллиптическими дугами
-    vec2 perspectiveDelta = vec2(delta.x * 1.15, delta.y * 2.1);
+    vec2 perspectiveDelta = vec2(delta.x * 1.15, delta.y * 2.0);
     float dist = length(perspectiveDelta);
 
     // 1. Маска горизонта: небо со звездами и верх луча остаются неподвижными
-    // Дополнительно учитываем изгиб холмов по краям экрана
     float hillCurve = -abs(coverUV.x - 0.5) * 0.14;
     float localHorizon = u_horizonTop + hillCurve;
     float duneMask = smoothstep(localHorizon, localHorizon + u_horizonFeather, coverUV.y);
 
     // 2. Плавное рождение в центре и мягкое затухание к краям (чтобы края фото не рвались)
-    float innerFade = smoothstep(0.01, 0.12, dist);
-    float outerFade = 1.0 - smoothstep(0.15, u_falloff, dist);
+    float innerFade = smoothstep(0.01, 0.10, dist);
+    float outerFade = 1.0 - smoothstep(0.18, u_falloff, dist);
 
     // Защитная виньетка у самых границ текстуры (0..1)
-    float edgeGuardX = smoothstep(0.0, 0.06, coverUV.x) * smoothstep(1.0, 0.94, coverUV.x);
-    float edgeGuardY = smoothstep(0.0, 0.06, coverUV.y) * smoothstep(1.0, 0.92, coverUV.y);
+    float edgeGuardX = smoothstep(0.0, 0.05, coverUV.x) * smoothstep(1.0, 0.95, coverUV.x);
+    float edgeGuardY = smoothstep(0.0, 0.05, coverUV.y) * smoothstep(1.0, 0.93, coverUV.y);
     float attenuation = duneMask * innerFade * outerFade * edgeGuardX * edgeGuardY;
 
     // 3. Радиальная волна, расходящаяся от центра наружу (-u_time * u_speed)
@@ -112,12 +111,12 @@ const FRAGMENT_SHADER = `
 
     // Основная медленная волна + легкая вторая гармоника для органичности звука
     float primaryWave = sin(phase);
-    float harmonicWave = sin(phase * 2.0 - 0.6) * 0.3;
-    float combinedWave = (primaryWave + harmonicWave) / 1.3;
+    float harmonicWave = sin(phase * 2.0 - 0.6) * 0.35;
+    float combinedWave = (primaryWave + harmonicWave) / 1.35;
 
-    // Направление смещения: радиально от центра + легкий вертикальный акцент по рельефу борозд
+    // Направление смещения: радиально от центра + поперечное дыхание борозд песка
     vec2 radialDir = normalize(delta + vec2(0.0001));
-    vec2 dispDir = normalize(mix(radialDir, vec2(radialDir.x * 0.45, 1.0), 0.45));
+    vec2 dispDir = normalize(mix(radialDir, vec2(radialDir.x * 0.55, 1.0), 0.4));
 
     // Смещаем UV деликатно, сохраняя жесткую геометрию самих горок
     vec2 displacedUV = clamp(
@@ -129,20 +128,19 @@ const FRAGMENT_SHADER = `
     vec4 texColor = texture2D(u_texture, displacedUV);
 
     // 4. Световой блик (luminance pulse), бегущий по ребрам песчаных бороздок
-    // Вычисляем локальную яркость текстуры, чтобы подсвечивать именно светлые грани барханов
     float ridgeLuma = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
-    float ridgeMask = smoothstep(0.03, 0.38, ridgeLuma);
+    float ridgeMask = smoothstep(0.02, 0.32, ridgeLuma);
 
     // Гребень световой волны
-    float crest = pow(max(0.0, primaryWave * 0.5 + 0.5), 2.6);
+    float crest = pow(max(0.0, primaryWave * 0.5 + 0.5), 2.2);
 
     // Теплый янтарно-золотистый оттенок в тон палитры Resonance
-    vec3 warmGlowColor = vec3(1.0, 0.78, 0.58);
-    vec3 highlight = warmGlowColor * crest * u_lumPulse * attenuation * (0.35 + 0.65 * ridgeMask);
+    vec3 warmGlowColor = vec3(1.0, 0.78, 0.56);
+    vec3 highlight = warmGlowColor * crest * u_lumPulse * attenuation * (0.3 + 0.7 * ridgeMask);
 
     // Мягкое дыхание самого источника света у основания луча
     float coreDist = length((coverUV - u_origin) * vec2(1.0, 1.6));
-    float corePulse = (0.5 + 0.5 * sin(u_time * u_speed * 0.85)) * exp(-coreDist * 7.5) * 0.08;
+    float corePulse = (0.5 + 0.5 * sin(u_time * u_speed * 0.9)) * exp(-coreDist * 6.5) * 0.12;
 
     vec3 finalRGB = texColor.rgb + highlight + warmGlowColor * corePulse;
 
@@ -178,17 +176,15 @@ export function AnimatedHeroBackground({
     const canvas = canvasRef.current
     if (!canvas) return
 
-    // Уважаем системную настройку prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) return
+    const gl =
+      canvas.getContext('webgl', {
+        alpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+      }) ||
+      (canvas.getContext('experimental-webgl') as WebGLRenderingContext | null)
 
-    const gl = canvas.getContext('webgl', {
-      alpha: true,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      powerPreference: 'low-power',
-    })
     if (!gl) return
 
     const vs = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER)
@@ -273,7 +269,6 @@ export function AnimatedHeroBackground({
     const resizeObserver = new ResizeObserver(updateSize)
     resizeObserver.observe(canvas)
 
-    // Останавливаем рендер, когда пользователь проскроллил ниже Hero
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
         isIntersecting = entry.isIntersecting
@@ -285,9 +280,8 @@ export function AnimatedHeroBackground({
     const img = new window.Image()
     img.crossOrigin = 'anonymous'
     img.decoding = 'async'
-    img.src = src
 
-    img.onload = () => {
+    const startShaderLoop = () => {
       if (disposed) return
       gl.bindTexture(gl.TEXTURE_2D, texture)
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
@@ -306,6 +300,12 @@ export function AnimatedHeroBackground({
         rafId = window.requestAnimationFrame(render)
       }
       rafId = window.requestAnimationFrame(render)
+    }
+
+    img.onload = startShaderLoop
+    img.src = src
+    if (img.complete && img.naturalWidth > 0) {
+      startShaderLoop()
     }
 
     return () => {
@@ -329,7 +329,7 @@ export function AnimatedHeroBackground({
         className,
       )}
     >
-      {/* Статичный fallback от Next/Image для мгновенного LCP и на случай отключенного WebGL */}
+      {/* Статичный fallback пока грузится текстура */}
       <Image
         src={src}
         alt=""
@@ -337,16 +337,16 @@ export function AnimatedHeroBackground({
         priority
         sizes="100vw"
         className={cn(
-          'object-cover transition-opacity duration-700 [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]',
+          'object-cover transition-opacity duration-500 [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]',
           webglReady ? 'opacity-0' : 'opacity-100',
         )}
       />
 
-      {/* WebGL 2D Shader Canvas с той же мягкой радиальной маской */}
+      {/* WebGL 2D Shader Canvas */}
       <canvas
         ref={canvasRef}
         className={cn(
-          'absolute inset-0 size-full transition-opacity duration-700 [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]',
+          'absolute inset-0 size-full transition-opacity duration-500 [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]',
           webglReady ? 'opacity-100' : 'opacity-0',
         )}
       />

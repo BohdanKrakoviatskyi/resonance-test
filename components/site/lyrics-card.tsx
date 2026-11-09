@@ -26,7 +26,6 @@ export function LyricsCard() {
   const [active, setActive] = useState(3)
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const id = window.setInterval(() => {
       setActive((current) => (current + 1) % lines.length)
     }, 2200)
