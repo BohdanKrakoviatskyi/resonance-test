@@ -7,7 +7,15 @@ import { GlassCard, Reveal, SectionHeading } from './primitives'
 
 export function Features() {
   return (
-    <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
+    <section id="features" className="relative mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-10 left-1/4 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,oklch(0.48_0.09_45/22%),transparent_70%)] blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-10 bottom-10 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,oklch(0.45_0.08_30/20%),transparent_70%)] blur-3xl"
+      />
       <SectionHeading
         eyebrow="Audio Engine & Interface"
         title="Built for people who actually care how their player feels."
