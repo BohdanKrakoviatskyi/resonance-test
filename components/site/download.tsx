@@ -5,20 +5,20 @@ const platforms = [
   {
     icon: Monitor,
     name: 'Windows',
-    detail: 'Windows 10 / 11, 64-bit',
+    detail: 'Windows 10 / 11 (64-bit)',
     primary: {
-      label: 'Download',
+      label: 'Download Installer',
       format: '.exe',
       href: '/api/download?platform=windows-exe',
     },
     secondary: [
-      { label: '.msi installer', href: '/api/download?platform=windows-msi' },
+      { label: '.msi package', href: '/api/download?platform=windows-msi' },
     ],
   },
   {
     icon: Laptop,
     name: 'macOS',
-    detail: 'macOS 13 or newer, Apple Silicon and Intel',
+    detail: 'macOS 13+ (Apple Silicon & Intel)',
     primary: {
       label: 'Apple Silicon',
       format: '.dmg',
@@ -31,7 +31,7 @@ const platforms = [
   {
     icon: Terminal,
     name: 'Linux',
-    detail: 'Wayland or X11, PipeWire or PulseAudio',
+    detail: 'Wayland / X11, PipeWire / PulseAudio',
     primary: {
       label: 'Download',
       format: '.AppImage',
@@ -49,36 +49,41 @@ export function Download() {
     <section id="download" className="relative mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-1/2 -z-10 h-80 -translate-y-1/2 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.5_0.08_45/30%),transparent_70%)] blur-2xl"
+        className="absolute inset-x-0 top-1/2 -z-10 h-80 -translate-y-1/2 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.5_0.08_45/28%),transparent_70%)] blur-2xl"
       />
       <SectionHeading
-        badge="Download"
-        title="Get Resonance"
-        description="Free and open source. Pick your platform and start listening."
+        eyebrow="Latest Release"
+        title="Get Resonance for your desktop"
+        description="Free and open source. Direct installers fetched straight from the latest signed GitHub release."
+        align="center"
       />
 
-      <ul className="mt-14 grid gap-4 md:grid-cols-3">
+      <ul className="mt-12 grid gap-4 md:grid-cols-3">
         {platforms.map(({ icon: Icon, name, detail, primary, secondary }, index) => (
           <li key={name}>
-            <Reveal delay={140 + index * 110} className="h-full">
+            <Reveal delay={100 + index * 100} className="h-full">
               <GlassCard className="flex h-full flex-col p-6">
-                <span className="grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/[0.05] text-primary">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <h3 className="mt-6 text-xl font-semibold tracking-tight">{name}</h3>
+                <div className="flex items-center justify-between">
+                  <span className="grid size-11 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-primary">
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+                    {primary.format}
+                  </span>
+                </div>
+                <h3 className="mt-5 text-xl font-semibold tracking-tight">{name}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
                 <a
                   href={primary.href}
                   download
-                  className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
+                  className="mt-7 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
                 >
                   <DownloadIcon className="size-4" aria-hidden="true" />
                   {primary.label}
-                  <span className="font-mono text-xs text-black/50">{primary.format}</span>
                 </a>
                 {secondary.length > 0 && (
-                  <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
-                    <span>Also available:</span>
+                  <div className="mt-3.5 flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
+                    <span>Also:</span>
                     {secondary.map((alt) => (
                       <a
                         key={alt.href}
@@ -97,16 +102,16 @@ export function Download() {
         ))}
       </ul>
 
-      <Reveal delay={400}>
+      <Reveal delay={350}>
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          Prefer to build it yourself?{' '}
+          Prefer to build from source?{' '}
           <a
             href={REPO_URL}
             target="_blank"
             rel="noreferrer"
             className="text-foreground underline underline-offset-4 hover:text-primary"
           >
-            Browse the source on GitHub
+            Clone the repository on GitHub
           </a>
           .
         </p>

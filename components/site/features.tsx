@@ -1,4 +1,4 @@
-import { Cpu, RefreshCw } from 'lucide-react'
+import { Cpu, HardDriveDownload, RefreshCw } from 'lucide-react'
 import { AppearanceCard } from './appearance-card'
 import { CrossfadeCard } from './crossfade-card'
 import { EqualizerCard } from './equalizer-card'
@@ -9,68 +9,77 @@ export function Features() {
   return (
     <section id="features" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24 md:py-32">
       <SectionHeading
-        badge="More than a player"
-        title="What you get"
-        description="Everything the streaming apps leave out, in one lightweight desktop player. Try the controls below."
+        eyebrow="Audio Engine & Interface"
+        title="Built for people who actually care how their player feels."
+        description="Web players eat hundreds of megabytes of RAM and give you zero control over sound. Resonance runs natively with real audio shaping and interactive controls."
       />
 
-      <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <Reveal delay={100} className="lg:col-span-2">
-          <EqualizerCard />
-        </Reveal>
-        <Reveal delay={200} className="lg:col-span-2">
+      <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-12">
+        <Reveal delay={60} className="lg:col-span-7">
           <LyricsCard />
         </Reveal>
-        <Reveal delay={300} className="md:col-span-2 lg:col-span-2">
+
+        <Reveal delay={140} className="lg:col-span-5">
+          <EqualizerCard />
+        </Reveal>
+
+        <Reveal delay={180} className="lg:col-span-5">
           <CrossfadeCard />
         </Reveal>
 
-        <Reveal delay={150} className="lg:col-span-2">
+        <Reveal delay={240} className="lg:col-span-7">
           <AppearanceCard />
         </Reveal>
-
-        <Reveal delay={250} className="lg:col-span-2">
-          <GlassCard className="flex h-full flex-col p-6">
-            <span className="grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/[0.05] text-primary">
-              <Cpu className="size-5" aria-hidden="true" />
-            </span>
-            <h3 className="mt-6 text-xl font-semibold tracking-tight">Light on your machine</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Built on Tauri and Rust, so it starts fast and stays easy on CPU and memory while you listen all day.
-            </p>
-            <div className="mt-auto flex items-end gap-1.5 pt-8" aria-hidden="true">
-              {Array.from({ length: 16 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="animate-eq-bounce h-12 w-full rounded-full bg-gradient-to-t from-primary/10 to-primary/70"
-                  style={{ animationDelay: `${(i % 8) * 140}ms` }}
-                />
-              ))}
-            </div>
-          </GlassCard>
-        </Reveal>
-
-        <Reveal delay={350} className="lg:col-span-2">
-          <GlassCard className="flex h-full flex-col p-6">
-            <span className="grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/[0.05] text-primary">
-              <RefreshCw className="size-5" aria-hidden="true" />
-            </span>
-            <h3 className="mt-6 text-xl font-semibold tracking-tight">Updates itself</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Resonance checks GitHub Releases, shows download progress and installs the new version in one click.
-            </p>
-            <div className="mt-auto space-y-2 pt-8" aria-hidden="true">
-              <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
-                <span>Downloading update</span>
-                <span className="text-primary">72%</span>
-              </div>
-              <div className="h-1.5 rounded-full bg-white/10">
-                <div className="h-full w-[72%] rounded-full bg-gradient-to-r from-primary/60 to-primary" />
-              </div>
-            </div>
-          </GlassCard>
-        </Reveal>
       </div>
+
+      <Reveal delay={300} className="mt-4">
+        <GlassCard className="grid divide-y divide-white/8 p-0 md:grid-cols-3 md:divide-x md:divide-y-0">
+          <div className="flex items-start gap-4 p-6">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-primary">
+              <Cpu className="size-4" aria-hidden="true" />
+            </span>
+            <div>
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-base font-semibold tracking-tight">Tauri + Rust core</h3>
+                <span className="font-mono text-xs text-primary">~45 MB RAM</span>
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                No bundled Chromium bloat. Starts in under a second and stays invisible to your CPU while you game or work.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4 p-6">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-primary">
+              <RefreshCw className="size-4" aria-hidden="true" />
+            </span>
+            <div>
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-base font-semibold tracking-tight">One-click auto-updater</h3>
+                <span className="font-mono text-xs text-primary">GitHub Releases</span>
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Checks for signed releases in the background, downloads the delta, and restarts into the new build right from the sidebar.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4 p-6">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-primary">
+              <HardDriveDownload className="size-4" aria-hidden="true" />
+            </span>
+            <div>
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-base font-semibold tracking-tight">Tiny native installers</h3>
+                <span className="font-mono text-xs text-primary">&lt; 15 MB</span>
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Signed builds for Windows (.exe, .msi), macOS (Apple Silicon &amp; Intel), and Linux (.AppImage, .deb, .rpm).
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      </Reveal>
     </section>
   )
 }

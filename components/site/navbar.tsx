@@ -1,7 +1,7 @@
 import { LogoMark, REPO_URL } from './primitives'
 
 const links = [
-  { href: '#features', label: 'Features' },
+  { href: '#features', label: 'Audio & UI' },
   { href: '#how-it-works', label: 'How it works' },
   { href: '#download', label: 'Download' },
 ]
@@ -11,11 +11,11 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <nav
         aria-label="Main"
-        className="flex w-full max-w-3xl items-center justify-between gap-4 rounded-full border border-white/10 bg-black/40 py-2 pr-2 pl-4 backdrop-blur-xl"
+        className="flex w-full max-w-3xl items-center justify-between gap-4 rounded-full border border-white/10 bg-[#0d0b0a]/80 py-2 pr-2 pl-4 backdrop-blur-xl"
       >
         <a href="#top" className="flex items-center gap-2.5 font-semibold tracking-tight">
           <span className="grid size-8 place-items-center overflow-hidden rounded-full border border-white/15 bg-black">
-            <LogoMark className="size-full rounded-none object-cover" />
+            <LogoMark className="size-6 rounded-none" />
           </span>
           Resonance
         </a>
@@ -44,7 +44,7 @@ export function Navbar() {
           </a>
           <a
             href="#download"
-            className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-85"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             Download
           </a>

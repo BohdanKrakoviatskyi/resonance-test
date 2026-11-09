@@ -1,96 +1,90 @@
 import Image from 'next/image'
-import { ArrowDown } from 'lucide-react'
-import { AnimatedText, LogoMark, REPO_URL, Reveal } from './primitives'
-
-const sources = [
-  'SoundCloud',
-  'YouTube Music',
-  'Tauri',
-  'Rust',
-  'GitHub',
-  'Windows',
-  'macOS',
-  'Linux',
-]
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import {
+  AnimatedText,
+  REPO_URL,
+  Reveal,
+  SoundCloudBadge,
+  YouTubeMusicBadge,
+} from './primitives'
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-36 md:pt-44">
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 text-center">
-        <h1 className="text-balance text-5xl leading-[1.05] font-semibold tracking-tight md:text-7xl">
+    <section id="top" className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-16 -z-10 mx-auto h-[520px] max-w-5xl rounded-full bg-[radial-gradient(55%_50%_at_50%_35%,oklch(0.52_0.09_45/38%),transparent_72%)] blur-3xl"
+      />
+
+      <div className="mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
+        <div
+          className="animate-rise-in inline-flex flex-wrap items-center justify-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs text-muted-foreground"
+          style={{ animationDelay: '40ms' }}
+        >
+          <span>One desktop library for</span>
+          <SoundCloudBadge />
+          <span className="text-white/30">+</span>
+          <YouTubeMusicBadge />
+        </div>
+
+        <h1 className="mt-6 text-balance text-4xl leading-[1.06] font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl">
           <AnimatedText
-            text="One player for every sound you love."
-            wordClassName="animate-text-shimmer bg-[linear-gradient(110deg,#fff_0%,rgba(255,255,255,0.72)_45%,oklch(0.88_0.07_55)_70%,#fff_100%)] bg-clip-text text-transparent"
-            baseDelay={40}
-            stagger={65}
+            text="Your underground tracks and main library in one window."
+            baseDelay={100}
+            stagger={50}
           />
         </h1>
-        <p className="max-w-xl text-pretty text-base text-muted-foreground md:text-lg">
-          <AnimatedText
-            text="SoundCloud. YouTube Music. A single, beautifully tuned desktop player."
-            baseDelay={420}
-            stagger={38}
-          />
+
+        <p
+          className="animate-rise-in mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
+          style={{ animationDelay: '420ms' }}
+        >
+          Stop juggling browser tabs. Resonance merges your SoundCloud likes and YouTube Music playlists into a fast, native desktop player with synced lyrics, a 10-band equalizer, and seamless crossfade.
         </p>
+
         <div
-          className="animate-rise-in flex flex-wrap items-center justify-center gap-3"
-          style={{ animationDelay: '780ms' }}
+          className="animate-rise-in mt-8 flex flex-wrap items-center justify-center gap-3"
+          style={{ animationDelay: '540ms' }}
         >
           <a
             href="#download"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-[0_0_40px_oklch(1_0_0/18%)] transition-transform hover:scale-[1.03]"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_40px_oklch(0.88_0.07_55/28%)] transition-transform hover:scale-[1.02]"
           >
             <ArrowDown className="size-4" aria-hidden="true" />
-            Download Resonance
+            Download for Desktop
           </a>
           <a
             href={REPO_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-white/10"
           >
-            View on GitHub
+            Source on GitHub
+            <ArrowUpRight className="size-4 text-muted-foreground" aria-hidden="true" />
           </a>
         </div>
+
+        <p
+          className="animate-rise-in mt-4 font-mono text-xs text-muted-foreground/80"
+          style={{ animationDelay: '640ms' }}
+        >
+          Windows 10/11 (.exe, .msi) · macOS (.dmg) · Linux (.AppImage, .deb, .rpm) · Built with Tauri &amp; Rust
+        </p>
       </div>
 
-      <div className="relative -mt-8 aspect-[16/9] w-full min-h-[360px] md:-mt-16 md:aspect-[2.2/1]">
-        <Image
-          src="/images/hero-dunes.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_72%,transparent_100%)]"
-        />
-        <div className="absolute top-[53%] left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-beam-pulse absolute -inset-10 rounded-full bg-primary/20 blur-3xl" />
-          <div className="relative grid size-20 place-items-center rounded-3xl border border-white/20 bg-gradient-to-b from-white/20 to-white/[0.04] p-1.5 shadow-[0_0_60px_oklch(0.88_0.07_55/35%)] backdrop-blur-md">
-            <div className="grid size-full place-items-center overflow-hidden rounded-2xl bg-black">
-              <LogoMark className="size-full rounded-2xl object-cover" />
-            </div>
-          </div>
+      <Reveal delay={220} className="mx-auto mt-12 max-w-6xl px-4 sm:px-6 md:mt-16">
+        <div className="relative rounded-[1.6rem] border border-white/12 bg-gradient-to-b from-white/12 to-white/[0.02] p-2 shadow-[0_40px_120px_-25px_oklch(0.45_0.09_45/55%)]">
+          <Image
+            src="/images/resonance-app.jpg"
+            alt="Resonance desktop interface playing 'права' by ooes from SoundCloud, showing YouTube Music and SoundCloud playlists on the left and live synced Russian lyrics on the right"
+            width={1280}
+            height={673}
+            priority
+            sizes="(min-width: 1152px) 1120px, 100vw"
+            className="h-auto w-full rounded-[1.15rem]"
+          />
         </div>
-      </div>
-
-      <div className="relative z-10 mx-auto -mt-6 max-w-5xl px-6 pb-8 md:-mt-12">
-        <Reveal delay={100}>
-          <p className="mb-6 text-center text-xs tracking-[0.14em] text-muted-foreground uppercase">
-            Plays what you love, on every desktop
-          </p>
-        </Reveal>
-        <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-lg font-medium tracking-tight text-foreground/55">
-          {sources.map((name, i) => (
-            <li key={name}>
-              <Reveal delay={180 + i * 60}>
-                <span className="inline-block transition-colors duration-300 hover:text-foreground">
-                  {name}
-                </span>
-              </Reveal>
-            </li>
-          ))}
-        </ul>
-      </div>
+      </Reveal>
     </section>
   )
 }

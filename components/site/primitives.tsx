@@ -26,6 +26,83 @@ export function LogoMark({ className }: { className?: string }) {
   )
 }
 
+export function SoundCloudBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 font-medium text-[#ff5500]',
+        className,
+      )}
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 14" fill="currentColor" className="h-3 w-4">
+        <path d="M1.5 7.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0v-5a.75.75 0 0 1 .75-.75Zm3-2a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3 1a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm6.25-3A4.75 4.75 0 0 1 21.4 5.3a3.25 3.25 0 0 1-.15 6.45H13.5a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .5-.7 4.73 4.73 0 0 1 3.5-1.05Z" />
+      </svg>
+      SoundCloud
+    </span>
+  )
+}
+
+export function YouTubeMusicBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 font-medium text-[#ff0033]',
+        className,
+      )}
+    >
+      <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" className="size-3.5">
+        <circle cx="8" cy="8" r="7.5" fill="#ff0033" />
+        <circle cx="8" cy="8" r="4.2" stroke="white" strokeOpacity="0.9" strokeWidth="1" />
+        <path d="M6.8 5.9L10.3 8L6.8 10.1V5.9Z" fill="white" />
+      </svg>
+      YouTube Music
+    </span>
+  )
+}
+
+export function WavySeekbar({
+  progress = 42,
+  accentColor,
+  className,
+}: {
+  progress?: number
+  accentColor?: string
+  className?: string
+}) {
+  return (
+    <div className={cn('relative flex h-4 w-full items-center', className)}>
+      <div className="h-[3px] w-full rounded-full bg-white/15" />
+      <div
+        className="absolute inset-y-0 left-0 overflow-hidden"
+        style={{ width: `${progress}%` }}
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 240 12"
+          preserveAspectRatio="none"
+          className="h-full w-[240px]"
+          style={{ color: accentColor ?? 'var(--primary)' }}
+        >
+          <path
+            d="M 0 6 Q 4 1, 8 6 T 16 6 T 24 6 T 32 6 T 40 6 T 48 6 T 56 6 T 64 6 T 72 6 T 80 6 T 88 6 T 96 6 T 104 6 T 112 6 T 120 6 T 128 6 T 136 6 T 144 6 T 152 6 T 160 6 T 168 6 T 176 6 T 184 6 T 192 6 T 200 6 T 208 6 T 216 6 T 224 6 T 232 6 T 240 6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <span
+        className="absolute top-1/2 h-3.5 w-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full shadow"
+        style={{
+          left: `${progress}%`,
+          background: accentColor ?? 'var(--primary)',
+        }}
+      />
+    </div>
+  )
+}
+
 export function Reveal({
   children,
   className,
@@ -83,7 +160,7 @@ export function AnimatedText({
   className,
   wordClassName,
   baseDelay = 0,
-  stagger = 55,
+  stagger = 50,
   scrollTrigger = false,
 }: {
   text: string
@@ -162,7 +239,7 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.012] shadow-[inset_0_1px_0_0_oklch(1_0_0/8%)]',
+        'relative overflow-hidden rounded-3xl border border-white/10 bg-[#14110f]/90 shadow-[inset_0_1px_0_0_oklch(1_0_0/7%)]',
         className,
       )}
       {...props}
@@ -172,38 +249,36 @@ export function GlassCard({
   )
 }
 
-export function Badge({ children }: { children: ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
-      <LogoMark className="size-3.5 rounded-sm" />
-      {children}
-    </span>
-  )
-}
-
 export function SectionHeading({
-  badge,
+  eyebrow,
   title,
   description,
+  align = 'left',
 }: {
-  badge: string
+  eyebrow?: string
   title: string
   description: string
+  align?: 'left' | 'center'
 }) {
+  const isCenter = align === 'center'
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-      <Reveal delay={0}>
-        <Badge>{badge}</Badge>
-      </Reveal>
-      <h2 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">
-        <AnimatedText
-          text={title}
-          scrollTrigger
-          baseDelay={80}
-          stagger={50}
-        />
+    <div
+      className={cn(
+        'flex flex-col gap-3',
+        isCenter ? 'mx-auto max-w-2xl items-center text-center' : 'max-w-2xl items-start text-left',
+      )}
+    >
+      {eyebrow && (
+        <Reveal delay={0}>
+          <span className="font-mono text-xs font-medium tracking-[0.16em] text-primary uppercase">
+            {eyebrow}
+          </span>
+        </Reveal>
+      )}
+      <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-5xl">
+        <AnimatedText text={title} scrollTrigger baseDelay={60} stagger={45} />
       </h2>
-      <Reveal delay={200}>
+      <Reveal delay={160}>
         <p className="max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
           {description}
         </p>

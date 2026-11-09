@@ -7,12 +7,12 @@ export function Footer() {
         <div className="max-w-sm space-y-3">
           <a href="#top" className="flex items-center gap-2.5 font-semibold tracking-tight">
             <span className="grid size-8 place-items-center overflow-hidden rounded-full border border-white/15 bg-black">
-              <LogoMark className="size-full rounded-none object-cover" />
+              <LogoMark className="size-6 rounded-none" />
             </span>
             Resonance
           </a>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            A desktop player for SoundCloud and YouTube Music. Resonance is an independent project and is not affiliated with SoundCloud or YouTube Music.
+            Native desktop player for SoundCloud and YouTube Music built with Tauri &amp; Rust. Independent open-source project, not affiliated with SoundCloud or Google.
           </p>
         </div>
 
@@ -20,7 +20,7 @@ export function Footer() {
           <ul className="space-y-3">
             <li>
               <a href="#features" className="text-muted-foreground hover:text-foreground">
-                Features
+                Audio &amp; UI
               </a>
             </li>
             <li>

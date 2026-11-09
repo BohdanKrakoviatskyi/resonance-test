@@ -4,7 +4,7 @@ import { Figtree, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
 const figtree = Figtree({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'latin-ext', 'cyrillic-ext'],
   variable: '--font-figtree',
 })
 
@@ -14,10 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Resonance — SoundCloud and YouTube Music in one player',
+  title: 'Resonance — SoundCloud & YouTube Music Desktop Player',
   description:
-    'Resonance is a lightweight desktop music player that brings SoundCloud and YouTube Music together, with an equalizer, synced lyrics, crossfade and deep appearance settings.',
-  generator: 'v0.app',
+    'Native Tauri + Rust desktop music player combining SoundCloud and YouTube Music with live synced lyrics, a multi-band equalizer, crossfade, and adaptive artwork themes.',
   icons: {
     icon: '/app-icon.png',
     apple: '/app-icon.png',
