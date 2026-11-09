@@ -1,11 +1,11 @@
 import { Check } from 'lucide-react'
+import { HitPlaySidebarWidget } from './hit-play-sidebar-widget'
 import {
   GlassCard,
   LogoMark,
   Reveal,
   SectionHeading,
   SoundCloudBadge,
-  WavySeekbar,
   YouTubeMusicBadge,
 } from './primitives'
 
@@ -14,21 +14,25 @@ const steps = [
     title: 'Connect accounts',
     description: 'Sign in to SoundCloud and YouTube Music directly inside Resonance.',
     visual: <ConnectVisual />,
+    interactive: false,
   },
   {
     title: 'Unified sidebar',
     description: 'Your playlists, likes, and radio mixes appear together in one clean tree.',
     visual: <LibraryVisual />,
+    interactive: false,
   },
   {
     title: 'Dial in your sound',
     description: 'Configure your multi-band EQ curve and crossfade overlap once.',
     visual: <TuneVisual />,
+    interactive: false,
   },
   {
     title: 'Hit play',
     description: 'Queue tracks across both platforms with live lyrics and waveform scrubbing.',
-    visual: <PlayVisual />,
+    visual: <HitPlaySidebarWidget />,
+    interactive: true,
   },
 ]
 
@@ -52,7 +56,7 @@ export function HowItWorks() {
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   {step.description}
                 </p>
-                <div className="mt-auto pt-6" aria-hidden="true">
+                <div className="mt-auto pt-5" aria-hidden={step.interactive ? undefined : 'true'}>
                   {step.visual}
                 </div>
               </GlassCard>
@@ -66,20 +70,20 @@ export function HowItWorks() {
 
 function ConnectVisual() {
   return (
-    <div className="flex h-36 flex-col justify-center gap-2.5 rounded-2xl bg-black/35 p-3.5">
-      <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-xs">
+    <div className="flex h-44 flex-col justify-center gap-2.5 rounded-2xl bg-black/35 p-3.5">
+      <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 text-xs">
         <SoundCloudBadge />
         <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400">
           <Check className="size-3" /> Linked
         </span>
       </div>
-      <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-xs">
+      <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 text-xs">
         <YouTubeMusicBadge />
         <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400">
           <Check className="size-3" /> Linked
         </span>
       </div>
-      <div className="flex items-center justify-center gap-2 pt-0.5 text-[11px] text-muted-foreground">
+      <div className="flex items-center justify-center gap-2 pt-1 text-[11px] text-muted-foreground">
         <LogoMark className="size-4" />
         <span>Synced with Resonance</span>
       </div>
@@ -92,6 +96,7 @@ function LibraryVisual() {
     { name: 'Vajbik :/', count: '45 tracks', source: 'sc', active: true },
     { name: 'Stalker 2: Radio', count: '40 tracks', source: 'sc', active: false },
     { name: 'Johan x goddamn', count: '6 tracks', source: 'yt', active: false },
+    { name: 'HardStyle', count: '25 tracks', source: 'sc', active: false },
   ]
   return (
     <ul className="space-y-1.5 rounded-2xl bg-black/35 p-3">
@@ -121,7 +126,7 @@ function LibraryVisual() {
 function TuneVisual() {
   const levels = [78, 65, 50, 44, 62, 74, 85]
   return (
-    <div className="flex h-36 items-end justify-between gap-2 rounded-2xl bg-black/35 p-4">
+    <div className="flex h-44 items-end justify-between gap-2 rounded-2xl bg-black/35 p-4">
       {levels.map((level, i) => (
         <div key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
           <div className="relative w-1.5 flex-1 rounded-full bg-white/10">
@@ -136,25 +141,6 @@ function TuneVisual() {
           </div>
         </div>
       ))}
-    </div>
-  )
-}
-
-function PlayVisual() {
-  return (
-    <div className="space-y-3.5 rounded-2xl bg-black/35 p-4">
-      <div className="space-y-1 text-left text-xs">
-        <p className="truncate text-foreground/30">Мысли мои - вода</p>
-        <p className="truncate font-semibold text-foreground [text-shadow:0_0_14px_oklch(0.88_0.07_55/55%)]">
-          Я же права, скажи им
-        </p>
-        <p className="truncate text-foreground/30">Всё было правильно</p>
-      </div>
-      <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
-        <span>1:16</span>
-        <WavySeekbar progress={52} />
-        <span>2:26</span>
-      </div>
     </div>
   )
 }
