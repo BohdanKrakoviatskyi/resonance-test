@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { AnimatedHeroBackground } from './animated-hero-background'
 import {
   AnimatedText,
   LogoMark,
@@ -76,14 +77,7 @@ export function Hero() {
 
       {/* Ribbed dunes / soundwave horizon background with glowing RS emblem */}
       <div className="relative -mt-4 aspect-[16/9] w-full min-h-[360px] md:-mt-10 md:aspect-[2.25/1]">
-        <Image
-          src="/images/hero-dunes.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover [mask-image:radial-gradient(90%_85%_at_50%_52%,black_30%,transparent_96%)]"
-        />
+        <AnimatedHeroBackground src="/images/hero-dunes.png" />
         {/* Extra seamless top & bottom feathering into the page background */}
         <div
           aria-hidden="true"
